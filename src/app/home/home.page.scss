@@ -2,10 +2,9 @@
   text-align: center;
 
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 10%;
+  left: 5%;
+  right: 5%;
 }
 
 #container strong {
@@ -24,4 +23,14 @@
 
 #container a {
   text-decoration: none;
+}
+
+#container h3{
+  margin-bottom: 5%;
+  margin-top: 10%;
+}
+
+#container ion-button {
+  margin-top: 2%;
+  margin-bottom: 4%;
 }

@@ -1,20 +1,28 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Te Llevo APP
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <h2>Bienvenido a TeLlevoAPP</h2>
+    <p>La aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
+    <h3>Porfavor ingresa sesion para continuar</h3>
+    <ion-list>
+      <ion-item>
+        <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="username"></ion-input>
+      </ion-item>
+      <ion-item> 
+        <ion-input type="password" label="Contraseña" labelPlacement="stacked" placeholder="Ingresa tu contraseña" [(ngModel)]="password">
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button expand="block" (click)="validateLogin()">Ingresar</ion-button>
+    <ion-button expand="block" fill="outline" routerLink="/register">Registrarse</ion-button>
+    <p><a href="">Olvidaste tu contraseña?</a></p>
   </div>
 </ion-content>
