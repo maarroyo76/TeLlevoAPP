@@ -36,6 +36,10 @@ export class HomePage {
    }
   }
 
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
+
   async showToastMessage(message: string, color: string) {
     const toast = await this.toastController.create({
       message,

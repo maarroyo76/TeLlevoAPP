@@ -15,13 +15,20 @@ export class LoginService {
   constructor() { }
 
   validateLogin(username: string, password: string): boolean {
-    console.log("Ejecutando validacion SERVICE!")
     const found = this.users.find(user => user.username === username && user.password === password);
     if (found !== undefined) {
-      console.log("Usuario encontrado!")
       return found.password === password;
     }
-    console.log("Usuario no encontrado!")
     return false;
+  }
+  
+  registerUser(username: string, password: string, name: string, lastname: string, email: string): boolean {
+    const existingUser = this.users.find(user => user.username === username);
+    if (existingUser) {
+      return false; 
+    }
+    const newUser = new User(username, password, name, lastname, email);
+    this.users.push(newUser);
+    return true;
   }
 }
