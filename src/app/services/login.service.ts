@@ -31,4 +31,13 @@ export class LoginService {
     this.users.push(newUser);
     return true;
   }
+
+  changePassword(username: string, newPassword: string): boolean {
+    const user = this.users.find(user => user.username === username);
+    if (user) {
+      user.password = newPassword;
+      return true;
+    }
+    return false;
+  }
 }
