@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
+    <ion-title id="header">
       Te Llevo APP  |  Registro
     </ion-title>
   </ion-toolbar>
@@ -8,10 +8,12 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <h2>Bienvenido a TeLlevoAPP</h2>
-    <p>La aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
-    <h3>Porfavor ingresa tus datos para registrarte</h3>
-    <ion-list>
+    <div id="title">
+      <h2>Bienvenido a TeLlevoAPP</h2>
+      <p>La aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
+      <h3>Porfavor ingresa tus datos para registrarte</h3>
+    </div>
+    <ion-list id="form">
       <ion-item>
         <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="username"></ion-input>
       </ion-item>
@@ -30,7 +32,13 @@
         </ion-input>
       </ion-item>
     </ion-list>
-    <ion-button expand="block" fill="outline" (click)="register()" [disabled]="!isFormValid">Registrarse</ion-button>
+    <ion-button expand="block" fill="outline" id="button" (click)="register()" [disabled]="!isFormValid">Registrarse</ion-button>
   </div>
-    
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-title id="footer">
+      <ion-label>© 2024 TeLlevoAPP</ion-label>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>

@@ -7,9 +7,7 @@ import { User } from '../models/user';
 export class LoginService {
 
   users: User[] = [
-    new User('admin', '12345'),
-    new User('User', '11235'),
-    new User('Martin', '223344')
+    new User('admin', 'admin12345'),
   ];
 
   constructor() { }

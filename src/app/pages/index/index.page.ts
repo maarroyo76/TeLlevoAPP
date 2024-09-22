@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController, AnimationController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-index',
@@ -7,7 +8,7 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./index.page.scss'],
 })
 export class IndexPage implements OnInit {
-  nombreUsuario: string;
+  username!: string;
   tieneAuto: boolean = false;
   destino: string = '';
   costoPorPersona: number | null = null;
@@ -19,9 +20,19 @@ export class IndexPage implements OnInit {
   viajeSeleccionado: any = null;
   mostrarContenido: boolean = false;
 
-  constructor(private alertController: AlertController) {
-    this.nombreUsuario = 'Martin';
+  constructor(
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private animationController: AnimationController,
+    private router: Router
+  ) {
+    let state = this.router.getCurrentNavigation()?.extras?.state;
+    if (state) {
+      this.username = state['username'];
+    }
   }
+
+  ngAfterViewInit(): void {}
 
   ngOnInit() {
     this.presentAlert();
@@ -34,17 +45,19 @@ export class IndexPage implements OnInit {
       buttons: [
         {
           text: 'Sí',
+          cssClass: 'alert-button-true',
           handler: () => {
             this.manejarRespuesta(true);
-          }
+          },
         },
         {
           text: 'No',
+          cssClass: 'alert-button-false',
           handler: () => {
             this.manejarRespuesta(false);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -55,17 +68,69 @@ export class IndexPage implements OnInit {
     this.mostrarContenido = true;
   }
 
-  registrarViaje() {
-    console.log(`Destino: ${this.destino}, Costo por Persona: ${this.costoPorPersona}`);
+  async confirmarSeleccion() {
+    if (this.viajeSeleccionado) {
+      const alert = await this.alertController.create({
+        header: 'Confirmación de Viaje',
+        message: `Viaje confirmado: ${this.viajeSeleccionado.destino} | \nCosto por persona: ${this.viajeSeleccionado.costo} CLP`,
+        buttons: ['OK'],
+      });
+  
+      await alert.present();
+
+      await alert.onDidDismiss();
+      this.clear();
+      this.showToastMessage('Viaje confirmado exitosamente', 'success');
+    }
   }
+  
+  async registrarViaje() {
+    if (this.destino && this.costoPorPersona !== null) {
+      const alert = await this.alertController.create({
+        header: 'Registro de Viaje',
+        message: `Destino del Viaje: ${this.destino} | \nCosto por persona: ${this.costoPorPersona} CLP`,
+        buttons: ['OK'],
+      });
+  
+      await alert.present();
+      
+      await alert.onDidDismiss();
+      this.showToastMessage('Viaje registrado exitosamente', 'success');
+      this.clear();
+    } else {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Por favor, selecciona un destino y especifica el costo por persona.',
+        buttons: ['OK'],
+      });
+  
+      await alert.present();
+
+      await alert.onDidDismiss();
+      this.showToastMessage('Error al registrar el viaje', 'danger');
+    }
+  }
+  
 
   seleccionarViaje(viaje: any) {
     this.viajeSeleccionado = viaje;
   }
 
-  confirmarSeleccion() {
-    if (this.viajeSeleccionado) {
-      console.log(`Viaje confirmado: ${this.viajeSeleccionado.destino}, Costo: ${this.viajeSeleccionado.costo}`);
-    }
+  async showToastMessage(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'bottom',
+    });
+    toast.present();
+  }
+
+  clear() {
+    this.username = '';
+    this.destino = '';
+    this.costoPorPersona = null;
+    this.viajeSeleccionado = null;
   }
 }
+

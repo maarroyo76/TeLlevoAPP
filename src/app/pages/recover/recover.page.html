@@ -1,14 +1,18 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Recupera tu contraseña</ion-title>
+    <ion-title id="header">
+      Recupera tu contraseña
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <h2>Recupera tu contraseña</h2>
-    <p>Ingresa tus datos para continuar</p>
-    <ion-list>
+    <div id="title">
+      <h2>Recupera tu contraseña</h2>
+      <p>Ingresa tus datos para continuar</p>
+    </div>
+    <ion-list id="form">
       <ion-item>
         <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="username"></ion-input>
       </ion-item>
@@ -19,6 +23,13 @@
         <ion-input label="Apellido" labelPlacement="stacked" placeholder="Ingresa tu apellido" [(ngModel)]="lastname"></ion-input>
       </ion-item>
     </ion-list>
-    <ion-button expand="block" fill="outline" (click)="recoverPassword()">Recuperar</ion-button>
+    <ion-button expand="block" fill="outline" id="button" (click)="recoverPassword()">Recuperar</ion-button>
   </div>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-title id="footer">
+      <ion-label>© 2024 TeLlevoAPP</ion-label>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>

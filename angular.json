@@ -65,7 +65,7 @@
               "namedChunks": true
             },
             "ci": {
-              "progress": false
+
             }
           },
           "defaultConfiguration": "production"
@@ -79,9 +79,7 @@
             "development": {
               "buildTarget": "app:build:development"
             },
-            "ci": {
-              "progress": false
-            }
+            "ci": {}
           },
           "defaultConfiguration": "development"
         },
