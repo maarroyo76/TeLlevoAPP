@@ -10,6 +10,12 @@
   - Los usuarios pueden ingresar su nombre de usuario y contraseña.
   - Botón para ingresar y navegar a la página de inicio.
 
+- **Registro de Usuario**:
+
+  - Formulario de registro con animaciones.
+  - Validación de campos antes de registrarse.
+  - Notificación de registro exitoso y redirección  a la página de inicio.
+
 - **Restablecimiento de Contraseña**:
   - Los usuarios pueden ingresar su nombre de usuario y recuperar su contraseña.
   - Un modal permite ingresar una nueva contraseña una vez que los datos han sido validados.
