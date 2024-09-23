@@ -16,10 +16,6 @@
 
 - **Página de Inicio**:
   - Muestra un mensaje de bienvenida al usuario.
-  - Permite acceder a otras secciones de la aplicación.
-  
-- **Página de Inicio**:
-  - Muestra un mensaje de bienvenida al usuario.
   - Permite registrar viajes si el usuario tiene auto o seleccionar viajes disponibles si no tiene.
   - Proporciona confirmaciones de selección de viaje y registro de viaje a través de alertas y toasts.
   - Acceso a información sobre viajes disponibles y costos.
