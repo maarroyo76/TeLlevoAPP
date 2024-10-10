@@ -132,7 +132,7 @@ export class RegisterPage implements OnInit {
     const isRegistered = this.loginService.registerUser(this.username, this.password, this.name, this.lastname, this.email);
     if (isRegistered) {
       this.showToastMessage('Registro exitoso!', 'success');
-      this.router.navigate(['/home']);
+      this.router.navigate(['/log-in']);
     } else {
       this.showToastMessage('Nombre de usuario ya en uso', 'warning');
     }
