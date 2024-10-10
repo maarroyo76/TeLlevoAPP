@@ -15,9 +15,19 @@ export class LoginService {
   validateLogin(username: string, password: string): boolean {
     const found = this.users.find(user => user.username === username && user.password === password);
     if (found !== undefined) {
+      localStorage.setItem('user', JSON.stringify(found));
       return found.password === password;
     }
     return false;
+  }
+
+  isAuth(): boolean {
+    const user = localStorage.getItem('user');
+    return !!user;
+  }
+
+  logOut(){
+    localStorage.removeItem('user');
   }
   
   registerUser(username: string, password: string, name: string, lastname: string, email: string): boolean {

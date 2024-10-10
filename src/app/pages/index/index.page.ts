@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController, AnimationController } from '@ionic/angular';
+import { LoginService } from 'src/app/services/login.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,9 +24,13 @@ export class IndexPage implements OnInit {
   constructor(
     private alertController: AlertController,
     private toastController: ToastController,
-    private animationController: AnimationController,
+    private loginService: LoginService,
     private router: Router
   ) {
+    if(!this.loginService.isAuth()){
+      this.router.navigate(['/log-in']);
+    }
+
     let state = this.router.getCurrentNavigation()?.extras?.state;
     if (state) {
       this.username = state['username'];
@@ -35,6 +40,7 @@ export class IndexPage implements OnInit {
   ngAfterViewInit(): void {}
 
   ngOnInit() {
+
     this.presentAlert();
   }
 
