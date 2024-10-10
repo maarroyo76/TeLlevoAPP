@@ -146,7 +146,7 @@ export class RecoverPage implements OnInit {
               const isRecovered = this.loginService.changePassword(this.username, data.newPassword);
               if (isRecovered) {
                 this.showToastMessage('Contraseña cambiada exitosamente', 'success');
-                this.router.navigate(['/home']);
+                this.router.navigate(['/log-in']);
                 this.clear();
               } else {
                 this.showToastMessage('Usuario no encontrado', 'warning');

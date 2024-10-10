@@ -1,14 +1,14 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../services/login.service';
+import { LoginService } from '../../services/login.service';
 import { ToastController, AnimationController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-log-in',
+  templateUrl: './log-in.page.html',
+  styleUrls: ['./log-in.page.scss'],
 })
-export class HomePage {
+export class LogInPage {
   username!: string;
   password!: string;
 
