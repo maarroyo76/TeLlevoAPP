@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Martin",
+      "lastname": "Arroyo",
+      "driver": true,
+      "username": "maarroyo76",
+      "email": "martingonzalo040@gmail.com",
+      "password": "m1234"
+    },
+    {
+      "id": "2",
+      "name": "Renato",
+      "lastname": "Reinoso",
+      "driver": false,
+      "username": "rena",
+      "email": "re.reinoso",
+      "password": "r12345"
+    }
+  ]
+}

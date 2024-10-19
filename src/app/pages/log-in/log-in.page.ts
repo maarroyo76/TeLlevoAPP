@@ -109,19 +109,23 @@ export class LogInPage {
   }
 
   async validateLogin() {
-    if(this.loginService.validateLogin(this.username, this.password)){
-      this.showToastMessage('Login exitoso!', 'success')
-      const navigationExtras = { 
-         state: { 
-           username: this.username
-         }
-       };
-      this.router.navigate(['/index'], navigationExtras);
-      this.clear();
-   }else{
-      this.showToastMessage('Invalido!', 'danger');
-   }
+    this.loginService.validateUser(this.username, this.password).subscribe(
+      (users) => {
+        if (users.length > 0) {
+          this.showToastMessage('Login exitoso!', 'success');
+          this.router.navigate(['/index']);
+          this.clear();
+        } else {
+          this.showToastMessage('Invalido!', 'danger');
+        }
+      },
+      (error) => {
+        console.error('Error durante la validación de login:', error);
+        this.showToastMessage('Error en el servidor, intenta más tarde.', 'danger');
+      }
+    );
   }
+
 
   goToRegister() {
     this.router.navigate(['/register']);
