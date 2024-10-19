@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { RecoverPageRoutingModule } from './recover-routing.module';
 
 import { RecoverPage } from './recover.page';
+import { RecoverModalComponent } from './recover-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { RecoverPage } from './recover.page';
     IonicModule,
     RecoverPageRoutingModule
   ],
-  declarations: [RecoverPage]
+  declarations: [RecoverPage, RecoverModalComponent],
 })
 export class RecoverPageModule {}

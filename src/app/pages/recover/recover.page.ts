@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
-import { AlertController, ToastController, AnimationController } from '@ionic/angular';
+import { ModalController, ToastController, AnimationController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { RecoverModalComponent } from './recover-modal.component';
+import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-recover',
@@ -9,14 +11,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./recover.page.scss'],
 })
 export class RecoverPage implements OnInit {
-  name: string = '';
-  lastname: string = '';
-  username: string = '';
-  newPassword: string = '';
+
+  user = {
+    id: '',
+    username: '',
+    name: '',
+    lastname: ''
+  };
+
+  userId: string | null = null;
 
   constructor(
     private loginService: LoginService,
-    private alertController: AlertController,
+    private modalController: ModalController,
     private toastController: ToastController,
     private animationController: AnimationController,
     private router: Router
@@ -116,56 +123,54 @@ export class RecoverPage implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.name.trim() !== '' &&
-           this.lastname.trim() !== '' &&
-           this.username.trim() !== '';
+    return this.user.name.trim() !== '' &&
+           this.user.lastname.trim() !== '' &&
+           this.user.username.trim() !== '';
   }
 
-  async recoverPassword() {
+  findUser() {
     if (this.isFormValid()) {
-      const alert = await this.alertController.create({
-        header: 'Recuperar contraseña',
-        inputs: [
-          {
-            name: 'newPassword',
-            type: 'password',
-            placeholder: 'Nueva contraseña'
-          }
-        ],
-        buttons: [
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-          },
-          {
-            text: 'Guardar',
-            handler: (data) => {
-              if (data.newPassword.trim() === '') {
-                this.showToastMessage('La contraseña no puede estar vacía', 'warning');
-              }
-              const isRecovered = this.loginService.changePassword(this.username, data.newPassword);
-              if (isRecovered) {
-                this.showToastMessage('Contraseña cambiada exitosamente', 'success');
-                this.router.navigate(['/log-in']);
-                this.clear();
-              } else {
-                this.showToastMessage('Usuario no encontrado', 'warning');
-              }
-              return true; 
-            }
-          }
-        ]
+      this.loginService.findUser(this.user.username, this.user.name, this.user.lastname).subscribe((users) => {
+        if (users.length > 0) {
+          this.user.id = users[0].id.toString(); 
+          this.openModal();
+        } else {
+          this.showToastMessage('Usuario no encontrado', 'warning');
+        }
       });
-      await alert.present();
     } else {
       this.showToastMessage('Todos los campos son requeridos', 'danger');
     }
   }
+
+  async openModal() {
+    const modal = await this.modalController.create({
+        component: RecoverModalComponent,
+        componentProps: {
+            userId: this.user.id
+        }
+    });
+    await modal.present();
+
+    const { data, role } = await modal.onDidDismiss(); // Aquí obtienes el rol
+
+    console.log('Rol recibido del modal:', role); // Asegúrate de ver qué rol recibes
+
+    if (role === 'confirm') {
+        this.showToastMessage('Contraseña actualizada', 'success');
+        this.clear();
+        this.router.navigate(['/log-in']);
+    } else {
+        console.log('Modal cerrado sin confirmar');
+    }
+  }
+
+
+
   clear() {
-    this.username = '';
-    this.name = '';
-    this.lastname = '';
-    this.newPassword = '';
+    this.user.username = '';
+    this.user.name = '';
+    this.user.lastname = '';
   }
 
   async showToastMessage(message: string, color: string) {
