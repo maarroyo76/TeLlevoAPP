@@ -1,31 +1,51 @@
 # Te Llevo APP
 
-## Descripción
+Te Llevo APP es una aplicación móvil diseñada para ayudar a los estudiantes de Duoc UC a organizar su retorno a casa después de la jornada vespertina. La aplicación proporciona herramientas para gestionar viajes compartidos, facilitando el transporte y mejorando la experiencia de los estudiantes.
 
-**Te Llevo APP** es una aplicación móvil híbrida desarrollada con Ionic y Angular para ayudar a los estudiantes de Duoc UC a organizar su retorno a casa después de la jornada vespertina. La aplicación permite a los estudiantes ofrecer y solicitar transporte utilizando los vehículos de otros alumnos, resolviendo problemas como la falta de transporte público, el alto costo de servicios de transporte particular y la ausencia de movilización propia.
+## Funciones Principales
 
-## Funcionalidades
+- **Registro de Usuarios**: Los estudiantes pueden registrarse en la aplicación con un nombre de usuario, contraseña, nombre, apellido y dirección de correo electrónico.
+  
+- **Inicio de Sesión**: Los usuarios pueden iniciar sesión en la aplicación y acceder a sus funciones personalizadas.
 
-- **Ingreso de Usuario**:
-  - Los usuarios pueden ingresar su nombre de usuario y contraseña.
-  - Botón para ingresar y navegar a la página de inicio.
+- **Gestión de Viajes**: Los usuarios pueden crear y gestionar viajes compartidos, eligiendo destinos y costos por persona.
 
-- **Registro de Usuario**:
+- **Opciones de Viaje**: Se ofrecen diferentes destinos con sus respectivos costos, permitiendo a los usuarios seleccionar la mejor opción.
 
-  - Formulario de registro con animaciones.
-  - Validación de campos antes de registrarse.
-  - Notificación de registro exitoso y redirección  a la página de inicio.
+- **Interfaz Amigable**: La aplicación cuenta con una interfaz fácil de usar, con animaciones para mejorar la experiencia del usuario.
 
-- **Restablecimiento de Contraseña**:
-  - Los usuarios pueden ingresar su nombre de usuario y recuperar su contraseña.
-  - Un modal permite ingresar una nueva contraseña una vez que los datos han sido validados.
+## Tecnologías Utilizadas
 
-- **Página de Inicio**:
-  - Muestra un mensaje de bienvenida al usuario.
-  - Permite registrar viajes si el usuario tiene auto o seleccionar viajes disponibles si no tiene.
-  - Proporciona confirmaciones de selección de viaje y registro de viaje a través de alertas y toasts.
-  - Acceso a información sobre viajes disponibles y costos.
+- **Ionic**: Framework para el desarrollo de aplicaciones móviles híbridas.
+- **Angular**: Framework para la construcción de aplicaciones web.
+- **TypeScript**: Lenguaje de programación que mejora JavaScript.
 
+## Requisitos
+
+- **Node.js**: Asegúrate de tener instalado Node.js en tu sistema para ejecutar la aplicación.
+
+- **Ionic Framework**: Esta aplicación utiliza Ionic Framework para el desarrollo móvil.
+
+## Instalación
+
+Para instalar y ejecutar el proyecto en tu máquina local, sigue estos pasos:
+
+1. **Clonar el repositorio**:
+     ```bash
+     git clone https://github.com/tu_usuario/TeLlevoApp.git
+     cd TeLlevoApp
+  
+2. **Instalar Dependencias**:
+    ```bash
+     npm install
+  
+3. **Iniciar la Aplicacion**:
+    ```bash
+    ionic serve
+
+## Contribuciones
+
+Las contribuciones son bienvenidas! Si deseas contribuir al proyecto, por favor, abre un issue o un pull request.
 
 
 
