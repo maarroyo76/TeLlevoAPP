@@ -1,8 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title id="header">
-      Te Llevo APP  |  Registro
-    </ion-title>
+    <ion-title id="header">Te Llevo APP  |  Registro</ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/log-in']">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -15,19 +18,24 @@
     </div>
     <ion-list id="form">
       <ion-item>
-        <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="username"></ion-input>
+        <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="user.username"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Nombre" labelPlacement="stacked" placeholder="Ingresa tu nombre" [(ngModel)]="name"></ion-input>
+        <ion-input label="Nombre" labelPlacement="stacked" placeholder="Ingresa tu nombre" [(ngModel)]="user.name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Apellido" labelPlacement="stacked" placeholder="Ingresa tu apellido" [(ngModel)]="lastname"></ion-input>
+        <ion-input label="Apellido" labelPlacement="stacked" placeholder="Ingresa tu apellido" [(ngModel)]="user.lastname"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Correo" labelPlacement="stacked" placeholder="Ingresa tu correo" [(ngModel)]="email"></ion-input>
+        <ion-label>¿Tienes Auto?</ion-label>
+        <ion-toggle slot="end" class="custom-toggle" [(ngModel)]="user.driver"></ion-toggle>
+        <span class="toggle-text">{{ user.driver ? 'Sí' : 'No' }}</span>
       </ion-item>
       <ion-item>
-        <ion-input type="password" label="Contraseña" labelPlacement="stacked" placeholder="Ingresa tu contraseña" [(ngModel)]="password">
+        <ion-input label="Correo" labelPlacement="stacked" placeholder="Ingresa tu correo" [(ngModel)]="user.email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="password" label="Contraseña" labelPlacement="stacked" placeholder="Ingresa tu contraseña" [(ngModel)]="user.password">
           <ion-input-password-toggle slot="end"></ion-input-password-toggle>
         </ion-input>
       </ion-item>

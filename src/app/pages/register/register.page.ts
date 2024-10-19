@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastController, AnimationController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { map, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -9,12 +10,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
+  user = {
+    id: 0,
+    username: '',
+    password: '',
+    name: '',
+    lastname: '',
+    driver: false,
+    email: '',
+  };
 
-  username: string = '';
-  password: string = '';
-  name: string = '';
-  lastname: string = '';
-  email: string = '';
 
   constructor(
     private loginService: LoginService,
@@ -116,11 +121,19 @@ export class RegisterPage implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.username.trim() !== '' &&
-           this.password.trim() !== '' &&
-           this.name.trim() !== '' &&
-           this.lastname.trim() !== '' &&
-           this.email.trim() !== '';
+    return this.user.username.trim() !== '' &&
+           this.user.password.trim() !== '' &&
+           this.user.name.trim() !== '' &&
+           this.user.lastname.trim() !== '' &&
+           this.user.email.trim() !== '';
+  }
+
+  private assignUserId(): Observable<number> {
+    return this.loginService.getUsers().pipe(
+      map(users => {
+        return users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+      })
+    );
   }
 
   register() {
@@ -129,14 +142,31 @@ export class RegisterPage implements OnInit {
       return;
     }
 
-    const isRegistered = this.loginService.registerUser(this.username, this.password, this.name, this.lastname, this.email);
-    if (isRegistered) {
-      this.showToastMessage('Registro exitoso!', 'success');
-      this.router.navigate(['/log-in']);
-    } else {
-      this.showToastMessage('Nombre de usuario ya en uso', 'warning');
-    }
+    this.assignUserId().pipe(
+      switchMap(newId => {
+        this.user.id = newId; // Asignar el nuevo ID
+        return this.loginService.createUser(this.user); // Crear el usuario
+      })
+    ).subscribe({
+      next: () => {
+        this.showToastMessage('Registro exitoso!', 'success');
+        this.router.navigate(['/log-in']);
+      },
+      error: () => {
+        this.showToastMessage('Nombre de usuario ya en uso', 'warning');
+      }
+    });
+  }
 
+
+
+  clearForm() {
+    this.user.username = '';
+    this.user.password = '';
+    this.user.name = '';
+    this.user.lastname = '';
+    this.user.email = '';
+    this.user.driver = false;
   }
 
   async showToastMessage(message: string, color: string) {
