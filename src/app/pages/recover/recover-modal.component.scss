@@ -2,7 +2,7 @@
     text-align: center;
   
     position: absolute;
-    top: 10%;
+    top: 20%;
     left: 5%;
     right: 5%;
   }
@@ -22,7 +22,7 @@
   }
   
   #container a {
-    text-decoration: none;
+    text-decoration: underline;
   }
   
   #container h3{
@@ -36,20 +36,8 @@
   }
 
   #form {
-    margin-bottom: 5%;
+    margin-top: 15%;
+    margin-bottom: 10%;
   }
-  
-.custom-toggle {
-  margin-right: 10px;
-}
-
-.toggle-text {
-  margin-right: 10px;
-  font-weight: bold;
-}
-
-
-
-
 
   

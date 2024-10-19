@@ -1,51 +1,60 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  users: User[] = [
-    new User('admin', 'admin12345'),
-  ];
+  private userKey = 'user';
 
-  constructor() { }
+  constructor(
+    private http: HttpClient
+ ) { }
 
-  validateLogin(username: string, password: string): boolean {
-    const found = this.users.find(user => user.username === username && user.password === password);
-    if (found !== undefined) {
-      localStorage.setItem('user', JSON.stringify(found));
-      return found.password === password;
-    }
-    return false;
+  validateUser(username: string, password: string) {
+    return this.http.get<User[]>('http://localhost:3000/users?username=' + username + '&password=' + password).pipe(
+      tap(users => {
+        if (users.length > 0) {
+          localStorage.setItem(this.userKey, JSON.stringify(users[0])); // Guarda el primer usuario encontrado
+        }
+      })
+    );
+  }
+
+  createUser(user: User) {
+    return this.http.post<User>('http://localhost:3000/users', user);
   }
 
   isAuth(): boolean {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem(this.userKey);
     return !!user;
   }
 
-  logOut(){
-    localStorage.removeItem('user');
-  }
-  
-  registerUser(username: string, password: string, name: string, lastname: string, email: string): boolean {
-    const existingUser = this.users.find(user => user.username === username);
-    if (existingUser) {
-      return false; 
-    }
-    const newUser = new User(username, password, name, lastname, email);
-    this.users.push(newUser);
-    return true;
+  getCurrentUser(): User | null {
+    const user = localStorage.getItem(this.userKey);
+    return user ? JSON.parse(user) : null;
   }
 
-  changePassword(username: string, newPassword: string): boolean {
-    const user = this.users.find(user => user.username === username);
-    if (user) {
-      user.password = newPassword;
-      return true;
-    }
-    return false;
+  logOut(){
+    localStorage.removeItem(this.userKey);
+  }
+
+  getUsers() {
+    return this.http.get<User[]>('http://localhost:3000/users');
+  }
+
+  getUserById(id: number) {
+    return this.http.get<User>('http://localhost:3000/users/' + id);
+  }
+
+  findUser(username: string, name: string, lastname: string) {
+    return this.http.get<User[]>('http://localhost:3000/users?username=' + username + '&name=' + name + '&lastname=' + lastname);
+  }
+
+  changePassword(id: number, newPassword: string) {
+    return this.http.patch<User>('http://localhost:3000/users/' + id, {password: newPassword});
   }
 }

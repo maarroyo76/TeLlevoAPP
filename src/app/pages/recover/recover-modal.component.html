@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button color="medium" (click)="cancel()">Cancelar</ion-button>
+        </ion-buttons>
+        <ion-title>Recupera tu contraseña</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div id="container">
+        <h2>Hola, {{name}}!</h2>
+        <p>Ingresa tu nueva contraseña</p>
+        <ion-list id="form">
+            <ion-item>
+                <ion-input labelPlacement="stacked" label="Nueva contraseña" [(ngModel)]="newPassword" placeholder="Ingresa tu nueva contraseña"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-input labelPlacement="stacked" label="Confirma tu contraseña" [(ngModel)]="confirmPassword" placeholder="Confirma tu contraseña"></ion-input>
+            </ion-item>
+        </ion-list>
+        <ion-button expand="block" fill="outline" id="button" (click)="recoverPassword()">Recuperar</ion-button>
+    </div>
+</ion-content>

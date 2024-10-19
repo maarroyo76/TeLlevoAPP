@@ -1,8 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title id="header">
-      Recupera tu contraseña
-    </ion-title>
+    <ion-title id="header">Recupera tu contraseña</ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/log-in']">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -14,16 +17,16 @@
     </div>
     <ion-list id="form">
       <ion-item>
-        <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="username"></ion-input>
+        <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="user.username"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Nombre" labelPlacement="stacked" placeholder="Ingresa tu nombre" [(ngModel)]="name"></ion-input>
+        <ion-input label="Nombre" labelPlacement="stacked" placeholder="Ingresa tu nombre" [(ngModel)]="user.name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Apellido" labelPlacement="stacked" placeholder="Ingresa tu apellido" [(ngModel)]="lastname"></ion-input>
+        <ion-input label="Apellido" labelPlacement="stacked" placeholder="Ingresa tu apellido" [(ngModel)]="user.lastname"></ion-input>
       </ion-item>
     </ion-list>
-    <ion-button expand="block" fill="outline" id="button" (click)="recoverPassword()">Recuperar</ion-button>
+    <ion-button expand="block" fill="outline" id="button" (click)="findUser()">Recuperar</ion-button>
   </div>
 </ion-content>
 <ion-footer>

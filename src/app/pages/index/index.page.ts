@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController, AnimationController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-index',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./index.page.scss'],
 })
 export class IndexPage implements OnInit {
-  username!: string;
+  user: User | null = null;
   tieneAuto: boolean = false;
   destino: string = '';
   costoPorPersona: number | null = null;
@@ -30,18 +31,22 @@ export class IndexPage implements OnInit {
     if(!this.loginService.isAuth()){
       this.router.navigate(['/log-in']);
     }
-
-    let state = this.router.getCurrentNavigation()?.extras?.state;
-    if (state) {
-      this.username = state['username'];
-    }
   }
 
   ngAfterViewInit(): void {}
 
   ngOnInit() {
-
+    const user = this.loginService.getCurrentUser();
+    if (user) {
+      this.user = user;
+      console.log('Usuario actual:', this.user);
+    }
     this.presentAlert();
+  }
+
+  logOut() {
+    this.loginService.logOut();
+    this.router.navigate(['/log-in']);
   }
 
   async presentAlert() {
@@ -133,7 +138,6 @@ export class IndexPage implements OnInit {
   }
 
   clear() {
-    this.username = '';
     this.destino = '';
     this.costoPorPersona = null;
     this.viajeSeleccionado = null;
