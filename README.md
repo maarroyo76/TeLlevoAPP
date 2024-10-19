@@ -19,6 +19,7 @@ Te Llevo APP es una aplicación móvil diseñada para ayudar a los estudiantes d
 - **Ionic**: Framework para el desarrollo de aplicaciones móviles híbridas.
 - **Angular**: Framework para la construcción de aplicaciones web.
 - **TypeScript**: Lenguaje de programación que mejora JavaScript.
+- **JSON Server**: API RESTful para simular un servidor backend y gestionar datos de usuarios y viajes.
 
 ## Requisitos
 
@@ -38,6 +39,10 @@ Para instalar y ejecutar el proyecto en tu máquina local, sigue estos pasos:
 2. **Instalar Dependencias**:
     ```bash
      npm install
+4. **Inicia el servidor de JSON Server (asegúrate de tener instalado json-server)**
+
+    ```bash
+    json-server info.json
   
 3. **Iniciar la Aplicacion**:
     ```bash
@@ -46,6 +51,3 @@ Para instalar y ejecutar el proyecto en tu máquina local, sigue estos pasos:
 ## Contribuciones
 
 Las contribuciones son bienvenidas! Si deseas contribuir al proyecto, por favor, abre un issue o un pull request.
-
-
-
