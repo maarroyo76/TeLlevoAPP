@@ -144,8 +144,8 @@ export class RegisterPage implements OnInit {
 
     this.assignUserId().pipe(
       switchMap(newId => {
-        this.user.id = newId; // Asignar el nuevo ID
-        return this.loginService.createUser(this.user); // Crear el usuario
+        this.user.id = newId;
+        return this.loginService.createUser(this.user);
       })
     ).subscribe({
       next: () => {
