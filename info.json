@@ -18,5 +18,17 @@
       "email": "re.reinoso",
       "password": "r12345"
     }
+  ],
+  "trips":[
+    {
+      "destination": "Puente Alto",
+      "pricePerPerson": 2000,
+      "totalPassengers": 1,
+      "totalCapacity": 4,
+      "licensePlate": "AB-CD-12",
+      "driverId": "1",
+      "passengerIds": ["2"]
+    }
+
   ]
 }

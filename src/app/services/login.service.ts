@@ -18,7 +18,7 @@ export class LoginService {
     return this.http.get<User[]>('http://localhost:3000/users?username=' + username + '&password=' + password).pipe(
       tap(users => {
         if (users.length > 0) {
-          localStorage.setItem(this.userKey, JSON.stringify(users[0])); // Guarda el primer usuario encontrado
+          localStorage.setItem(this.userKey, JSON.stringify(users[0]));
         }
       })
     );
