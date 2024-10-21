@@ -33,7 +33,7 @@ Para instalar y ejecutar el proyecto en tu máquina local, sigue estos pasos:
 
 1. **Clonar el repositorio**:
      ```bash
-     git clone https://github.com/tu_usuario/TeLlevoApp.git
+     git clone https://github.com/maarroyo76/TeLlevoApp.git
      cd TeLlevoApp
   
 2. **Instalar Dependencias**:
