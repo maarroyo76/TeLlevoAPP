@@ -3,7 +3,6 @@ import { LoginService } from 'src/app/services/login.service';
 import { ModalController, ToastController, AnimationController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { RecoverModalComponent } from './recover-modal.component';
-import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-recover',
@@ -152,16 +151,14 @@ export class RecoverPage implements OnInit {
     });
     await modal.present();
 
-    const { data, role } = await modal.onDidDismiss(); // Aquí obtienes el rol
-
-    console.log('Rol recibido del modal:', role); // Asegúrate de ver qué rol recibes
+    const { data, role } = await modal.onDidDismiss(); 
 
     if (role === 'confirm') {
         this.showToastMessage('Contraseña actualizada', 'success');
         this.clear();
         this.router.navigate(['/log-in']);
     } else {
-        console.log('Modal cerrado sin confirmar');
+        this.showToastMessage('Operación cancelada', 'warning');
     }
   }
 

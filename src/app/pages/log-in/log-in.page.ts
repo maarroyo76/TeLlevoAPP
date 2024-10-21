@@ -109,19 +109,23 @@ export class LogInPage {
   }
 
   async validateLogin() {
+    if (!this.username || !this.password) {
+      this.showToast('Por favor, complete ambos campos.', 'warning');
+      return;
+    }
+
     this.loginService.validateUser(this.username, this.password).subscribe(
       (users) => {
         if (users.length > 0) {
-          this.showToastMessage('Login exitoso!', 'success');
-          this.router.navigate(['/index']);
+          this.showToast('Bienvenido, ' + this.username + '!', 'success'); 
           this.clear();
+          this.router.navigate(['/index']);
         } else {
-          this.showToastMessage('Invalido!', 'danger');
+          this.showToast('Credenciales inválidas!', 'danger');
         }
       },
       (error) => {
-        console.error('Error durante la validación de login:', error);
-        this.showToastMessage('Error en el servidor, intenta más tarde.', 'danger');
+        this.showToast('Error en el servidor, intenta más tarde.', 'danger');
       }
     );
   }
@@ -132,7 +136,7 @@ export class LogInPage {
     this.clear();
   }
 
-  async showToastMessage(message: string, color: string) {
+  async showToast(message: string, color: string) {
     const toast = await this.toastController.create({
       message,
       duration: 3000,
