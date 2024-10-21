@@ -15,8 +15,44 @@
       "lastname": "Reinoso",
       "driver": false,
       "username": "rena",
-      "email": "re.reinoso",
+      "email": "re.reinoso@duocuc.cl",
       "password": "r12345"
+    },
+    {
+      "id": "3",
+      "name": "Javier",
+      "lastname": "Gonzalez",
+      "driver": true,
+      "username": "jgonzalez",
+      "email":"",
+      "password": "j12345"
+    },
+    {
+      "id": "4",
+      "name": "Cristian",
+      "lastname": "Gonzalez",
+      "driver": true,
+      "username": "cristian",
+      "email": "",
+      "password": "c12345"
+    },
+    {
+      "id": "5",
+      "name": "Jhon",
+      "lastname": "Doe",
+      "driver": false,
+      "username": "Jdoe",
+      "email": "",
+      "password": "j12345"
+    },
+    {
+      "id": "6",
+      "name": "Juan",
+      "lastname": "Perez",
+      "driver": false,
+      "username": "jperez",
+      "email": "",
+      "password": "j12345"
     }
   ],
   "trips":[
@@ -27,8 +63,16 @@
       "totalCapacity": 4,
       "licensePlate": "AB-CD-12",
       "driverId": "1",
+      "passengerIds": ["5, 6"]
+    },
+    {
+      "destination": "La Florida",
+      "pricePerPerson": 1500,
+      "totalPassengers": 2,
+      "totalCapacity": 4,
+      "licensePlate": "EF-GH-34",
+      "driverId": "3",
       "passengerIds": ["2"]
     }
-
   ]
 }
