@@ -30,21 +30,18 @@
     margin-top: 10%;
   }
   
-  #container ion-button {
+ #container ion-button {
+    color: white;
     margin-top: 2%;
     margin-bottom: 4%;
+    --background: #69278c;
+    outline: none;
+    border: none;
   }
 
   #form {
     margin-top: 15%;
     margin-bottom: 10%;
   }
-
-  
-ion-content{
-  ion-button{
-    --background: #69278c
-  }
-}
 
   
