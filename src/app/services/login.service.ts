@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -9,16 +10,25 @@ import { tap } from 'rxjs';
 export class LoginService {
 
   private userKey = 'user';
+  private currentUser: User | null = null;
 
   constructor(
-    private http: HttpClient
- ) { }
+    private http: HttpClient,
+    private storage: Storage
+  ) {
+    this.init();
+  }
+
+  async init() {
+    await this.storage.create();
+  }
 
   validateUser(username: string, password: string) {
     return this.http.get<User[]>('http://localhost:3000/users?username=' + username + '&password=' + password).pipe(
-      tap(users => {
+      tap(async users => {
         if (users.length > 0) {
-          localStorage.setItem(this.userKey, JSON.stringify(users[0]));
+          await this.storage.set(this.userKey, users[0]);
+          this.currentUser = users[0];
         }
       })
     );
@@ -28,18 +38,19 @@ export class LoginService {
     return this.http.post<User>('http://localhost:3000/users', user);
   }
 
-  isAuth(): boolean {
-    const user = localStorage.getItem(this.userKey);
+  async isAuth(): Promise<boolean> {
+    const user = await this.storage.get(this.userKey);
     return !!user;
   }
 
-  getCurrentUser(): User | null {
-    const user = localStorage.getItem(this.userKey);
-    return user ? JSON.parse(user) : null;
+  async getCurrentUser(): Promise<User | null> {
+    const user = await this.storage.get(this.userKey);
+    return user ? user : null;
   }
 
-  logOut(){
-    localStorage.removeItem(this.userKey);
+  async logOut() {
+    await this.storage.remove(this.userKey);
+    this.currentUser = null;
   }
 
   getUsers() {
@@ -55,6 +66,6 @@ export class LoginService {
   }
 
   changePassword(id: number, newPassword: string) {
-    return this.http.patch<User>('http://localhost:3000/users/' + id, {password: newPassword});
+    return this.http.patch<User>('http://localhost:3000/users/' + id, { password: newPassword });
   }
 }
