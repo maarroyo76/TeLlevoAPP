@@ -6,4 +6,5 @@ export interface Trip {
   licensePlate: string;        // Patente del vehículo
   driverId: string;            // ID del conductor
   passengerIds: string[];      // Lista de IDs de los pasajeros
+  horario: string;             // Horario de salida
 }

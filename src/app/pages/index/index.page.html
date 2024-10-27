@@ -1,11 +1,6 @@
 <ion-header *ngIf="mostrarContenido" [translucent]="true">
   <ion-toolbar>
     <ion-title>Te Llevo APP | Home</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="logOut()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -15,33 +10,74 @@
       <h2>Bienvenido, {{ user?.username }}!</h2>
       <p>A la aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
     </div>
-    <div *ngIf="tieneAuto">
-      <h4>Registra Tu Viaje</h4>
+    <div>
+      <ion-button expand="full" (click)="mostrarFormularioViaje()">Registra tu Viaje</ion-button>
+      <ion-button expand="full" (click)="mostrarViajesRegistrados()">Ver Viajes Disponibles</ion-button>
+    </div>
+
+    <div *ngIf="mostrarFormulario">
+      <h4>Registrar Tu Viaje</h4>
       <ion-item>
-        <ion-input label="Nombre destino" labelPlacement="floating" [(ngModel)]="destino"></ion-input>
+        <ion-input label="Nombre del Chofer" labelPlacement="floating" [(ngModel)]="choferNombre"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Costo por Persona" labelPlacement="floating" type="number" [(ngModel)]="costoPorPersona"></ion-input>
+        <ion-input label="Nombre Destino" labelPlacement="floating" [(ngModel)]="destino"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Matrícula" labelPlacement="floating" [(ngModel)]="matricula"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Horario" labelPlacement="floating" type="time" [(ngModel)]="horario"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Costo del Viaje" labelPlacement="floating" type="number" [(ngModel)]="costoPorPersona"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Cantidad de Asientos Disponibles" labelPlacement="floating" type="number" [(ngModel)]="asientosDisponibles"></ion-input>
       </ion-item>
       <ion-button expand="full" (click)="registrarViaje()">Registra Tu Viaje</ion-button>
     </div>
 
-    <div *ngIf="!tieneAuto">
+    <div *ngIf="mostrarViajes">
       <h4>Viajes Disponibles</h4>
       <ion-list>
-        <ion-item *ngFor="let viaje of viajesDisponibles" (click)="seleccionarViaje(viaje)">
+        <ion-item *ngFor="let viaje of viajesRegistrados">
           <ion-label>
-            <h2>{{ viaje.destino }}</h2>
-            <p>Costo: {{ viaje.costo | currency }}</p>
+            <h2>{{ viaje.destination }}</h2>
+            <p>Costo: {{ viaje.pricePerPerson | currency }}</p>
+            <p>Matrícula: {{ viaje.licensePlate }}</p>
+            <p>Horario: {{ viaje.horario }}</p>
+            <p>Nombre del Chofer: {{ viaje.driverId }}</p>
+            <p>Asientos Disponibles: {{ viaje.totalCapacity - viaje.totalPassengers }}</p>
           </ion-label>
-          <ion-icon *ngIf="viajeSeleccionado === viaje" name="car" slot="end" color="primary"></ion-icon>
+          <div>
+            <ion-button expand="full" (click)="registrarseEnViaje(viaje)">unirse</ion-button>
+            <ion-button expand="full" (click)="verCapacidad(viaje)">Ver Capacidad</ion-button>
+          </div>
         </ion-item>
       </ion-list>
-      <ion-button expand="full" (click)="confirmarSeleccion()" [disabled]="!viajeSeleccionado">Seleccionar Viaje</ion-button>
-      <p *ngIf="viajeSeleccionado">Has seleccionado: {{ viajeSeleccionado.destino }}</p>
+      <p *ngIf="viajeSeleccionado">Has seleccionado: {{ viajeSeleccionado.destination }}</p>
+    </div>
+
+    <div *ngIf="mostrarRegistroViaje">
+      <h4>Unete al viaje</h4>
+      <ion-item>
+        <ion-input label="Nombre" labelPlacement="floating" [(ngModel)]="nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Apellido" labelPlacement="floating" [(ngModel)]="apellido"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-select [(ngModel)]="metodoPago" placeholder="Método de Pago">
+          <ion-select-option value="efectivo">Efectivo</ion-select-option>
+          <ion-select-option value="transferencia">Transferencia</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-button expand="full" (click)="registrarParticipante()">unirse</ion-button>
     </div>
   </div>
 </ion-content>
+
 <ion-footer>
   <ion-toolbar>
     <ion-title id="footer">

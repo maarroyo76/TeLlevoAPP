@@ -1,8 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController, AnimationController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
+import { Trip } from 'src/app/models/trip'; // Asegúrate de importar Trip
+import { TripService } from 'src/app/services/trip.service'; // Asegúrate de importar TripService
+
+export interface Participante {
+  nombre: string;
+  apellido: string;
+  metodoPago: string;
+}
 
 @Component({
   selector: 'app-index',
@@ -11,29 +19,34 @@ import { User } from 'src/app/models/user';
 })
 export class IndexPage implements OnInit {
   user: User | null = null;
-  tieneAuto: boolean = false;
   destino: string = '';
   costoPorPersona: number | null = null;
-  viajesDisponibles = [
-    { destino: 'Puente Alto ', costo: 2000 },
-    { destino: 'La Florida', costo: 1500 },
-    { destino: 'Estadio Nacional', costo: 1000 },
-  ];
-  viajeSeleccionado: any = null;
-  mostrarContenido: boolean = false;
+  matricula: string = '';
+  horario: string = '';
+  choferNombre: string = '';
+  asientosDisponibles: number | null = null;
+
+  viajesRegistrados: Trip[] = []; // Cambiado a tipo Trip
+  mostrarFormulario: boolean = false;
+  mostrarViajes: boolean = false;
+  viajeSeleccionado: Trip | null = null; // Cambiado a tipo Trip
+  nombre: string = '';
+  apellido: string = '';
+  metodoPago: string = '';
+  mostrarRegistroViaje: boolean = false;
+  mostrarContenido: boolean = true;
 
   constructor(
     private alertController: AlertController,
     private toastController: ToastController,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private tripService: TripService // Añadido TripService
   ) {
-    if(!this.loginService.isAuth()){
+    if (!this.loginService.isAuth()) {
       this.router.navigate(['/log-in']);
     }
   }
-
-  ngAfterViewInit(): void {}
 
   ngOnInit() {
     const user = this.loginService.getCurrentUser();
@@ -41,90 +54,68 @@ export class IndexPage implements OnInit {
       this.user = user;
       console.log('Usuario actual:', this.user);
     }
-    this.presentAlert();
+    this.loadTrips(); // Cargar los viajes disponibles
   }
 
-  logOut() {
-    this.loginService.logOut();
-    this.router.navigate(['/log-in']);
+  async loadTrips() {
+    this.tripService.getTrips().subscribe(
+      (trips: Trip[]) => {
+        this.viajesRegistrados = trips; // Guardar los viajes cargados
+      },
+      (error) => {
+        console.error('Error al cargar los viajes:', error);
+      }
+    );
   }
 
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: '¿Tienes auto?',
-      message: 'Elige una opción:',
-      buttons: [
-        {
-          text: 'Sí',
-          cssClass: 'alert-button-true',
-          handler: () => {
-            this.manejarRespuesta(true);
-          },
-        },
-        {
-          text: 'No',
-          cssClass: 'alert-button-false',
-          handler: () => {
-            this.manejarRespuesta(false);
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
-  manejarRespuesta(respuesta: boolean) {
-    this.tieneAuto = respuesta;
-    this.mostrarContenido = true;
-  }
-
-  async confirmarSeleccion() {
-    if (this.viajeSeleccionado) {
-      const alert = await this.alertController.create({
-        header: 'Confirmación de Viaje',
-        message: `Viaje confirmado: ${this.viajeSeleccionado.destino} | \nCosto por persona: ${this.viajeSeleccionado.costo} CLP`,
-        buttons: ['OK'],
-      });
-  
-      await alert.present();
-
-      await alert.onDidDismiss();
-      this.clear();
-      this.showToastMessage('Viaje confirmado exitosamente', 'success');
-    }
-  }
-  
   async registrarViaje() {
-    if (this.destino && this.costoPorPersona !== null) {
-      const alert = await this.alertController.create({
-        header: 'Registro de Viaje',
-        message: `Destino del Viaje: ${this.destino} | \nCosto por persona: ${this.costoPorPersona} CLP`,
-        buttons: ['OK'],
+    if (this.destino && this.costoPorPersona !== null && this.matricula && this.horario && this.choferNombre && this.asientosDisponibles !== null) {
+      const nuevoViaje: Trip = {
+        destination: this.destino,
+        pricePerPerson: this.costoPorPersona,
+        licensePlate: this.matricula,
+        totalPassengers: 0,
+        totalCapacity: this.asientosDisponibles,
+        driverId: this.choferNombre,
+        passengerIds: [],
+        horario: this.horario,
+      };
+
+      this.viajesRegistrados.push(nuevoViaje);
+
+      // Guarda el nuevo viaje en la API
+      this.tripService.addTrip(nuevoViaje).subscribe(() => {
+        this.viajesRegistrados.push(nuevoViaje); // Agregar localmente
+        this.showToastMessage('Viaje registrado exitosamente', 'success');
+        this.clear();
+        this.mostrarFormulario = false;
+        this.loadTrips(); // Cargar nuevamente los viajes
       });
-  
-      await alert.present();
-      
-      await alert.onDidDismiss();
-      this.showToastMessage('Viaje registrado exitosamente', 'success');
-      this.clear();
+
     } else {
       const alert = await this.alertController.create({
         header: 'Error',
-        message: 'Por favor, selecciona un destino y especifica el costo por persona.',
+        message: 'Por favor, completa todos los campos: destino, costo por persona, matrícula, horario, nombre del chofer y asientos disponibles.',
         buttons: ['OK'],
       });
-  
-      await alert.present();
 
+      await alert.present();
       await alert.onDidDismiss();
       this.showToastMessage('Error al registrar el viaje', 'danger');
     }
   }
-  
 
-  seleccionarViaje(viaje: any) {
-    this.viajeSeleccionado = viaje;
+  clear() {
+    this.destino = '';
+    this.costoPorPersona = null;
+    this.matricula = '';
+    this.horario = '';
+    this.choferNombre = '';
+    this.asientosDisponibles = null;
+    this.nombre = '';
+    this.apellido = '';
+    this.metodoPago = '';
+    this.mostrarRegistroViaje = false;
   }
 
   async showToastMessage(message: string, color: string) {
@@ -137,10 +128,58 @@ export class IndexPage implements OnInit {
     toast.present();
   }
 
-  clear() {
-    this.destino = '';
-    this.costoPorPersona = null;
-    this.viajeSeleccionado = null;
+  mostrarFormularioViaje() {
+    this.mostrarFormulario = true;
+    this.mostrarViajes = false;
+  }
+
+  mostrarViajesRegistrados() {
+    this.mostrarViajes = true;
+    this.mostrarFormulario = false;
+  }
+
+  registrarseEnViaje(viaje: Trip) {
+    this.viajeSeleccionado = viaje;
+    this.mostrarRegistroViaje = true;
+  }
+
+  async registrarParticipante() {
+    if (this.nombre && this.apellido && this.metodoPago) {
+      if (this.viajeSeleccionado && this.viajeSeleccionado.totalCapacity > this.viajeSeleccionado.totalPassengers) {
+        this.viajeSeleccionado.passengerIds.push(this.nombre + ' ' + this.apellido); // Agregar el participante por ID o nombre
+        this.viajeSeleccionado.totalPassengers++; // Incrementar el número de pasajeros
+
+        this.showToastMessage('Te has registrado exitosamente en el viaje', 'success');
+        this.clear();
+        this.mostrarRegistroViaje = false;
+      } else {
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'No hay asientos disponibles para registrarse en este viaje.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+      }
+    } else {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Por favor, completa todos los campos: nombre, apellido y método de pago.',
+        buttons: ['OK'],
+      });
+
+      await alert.present();
+      await alert.onDidDismiss();
+      this.showToastMessage('Error al registrarte en el viaje', 'danger');
+    }
+  }
+
+  async verCapacidad(viaje: Trip) {
+    const alert = await this.alertController.create({
+      header: 'Capacidad del Viaje',
+      message: `Asientos Disponibles: ${viaje.totalCapacity - viaje.totalPassengers}\n` +
+               (viaje.passengerIds.length > 0 ? 'Participantes:\n' + viaje.passengerIds.join(', ') : 'No hay participantes registrados en este viaje.'),
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 }
-
