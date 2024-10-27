@@ -11,14 +11,14 @@
       <p>A la aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
     </div>
     <div>
-      <ion-button expand="full" (click)="mostrarFormularioViaje()">Registra tu Viaje</ion-button>
-      <ion-button expand="full" (click)="mostrarViajesRegistrados()">Ver Viajes Disponibles</ion-button>
+      <ion-button *ngIf="user?.driver" expand="full" (click)="mostrarFormularioViaje()">Registra tu Viaje</ion-button>
+      <ion-button *ngIf="!user?.driver" expand="full" (click)="mostrarViajesRegistrados()">Ver Viajes Disponibles</ion-button>
     </div>
 
     <div *ngIf="mostrarFormulario">
       <h4>Registrar Tu Viaje</h4>
       <ion-item>
-        <ion-input label="Nombre del Chofer" labelPlacement="floating" [(ngModel)]="choferNombre"></ion-input>
+        <ion-input label="Nombre del Chofer" labelPlacement="floating" [(ngModel)]="choferNombre" [readonly]="true"></ion-input>
       </ion-item>
       <ion-item>
         <ion-input label="Nombre Destino" labelPlacement="floating" [(ngModel)]="destino"></ion-input>
@@ -51,29 +51,12 @@
             <p>Asientos Disponibles: {{ viaje.totalCapacity - viaje.totalPassengers }}</p>
           </ion-label>
           <div>
-            <ion-button expand="full" (click)="registrarseEnViaje(viaje)">unirse</ion-button>
+            <ion-button expand="full" (click)="registrarseEnViaje(viaje)">Unirse</ion-button>
             <ion-button expand="full" (click)="verCapacidad(viaje)">Ver Capacidad</ion-button>
           </div>
         </ion-item>
       </ion-list>
       <p *ngIf="viajeSeleccionado">Has seleccionado: {{ viajeSeleccionado.destination }}</p>
-    </div>
-
-    <div *ngIf="mostrarRegistroViaje">
-      <h4>Unete al viaje</h4>
-      <ion-item>
-        <ion-input label="Nombre" labelPlacement="floating" [(ngModel)]="nombre"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Apellido" labelPlacement="floating" [(ngModel)]="apellido"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-select [(ngModel)]="metodoPago" placeholder="Método de Pago">
-          <ion-select-option value="efectivo">Efectivo</ion-select-option>
-          <ion-select-option value="transferencia">Transferencia</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-button expand="full" (click)="registrarParticipante()">unirse</ion-button>
     </div>
   </div>
 </ion-content>

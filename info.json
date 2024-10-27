@@ -24,7 +24,7 @@
       "lastname": "Gonzalez",
       "driver": true,
       "username": "jgonzalez",
-      "email":"",
+      "email": "",
       "password": "j12345"
     },
     {
@@ -53,9 +53,126 @@
       "username": "jperez",
       "email": "",
       "password": "j12345"
+    },
+    {
+      "id": 7,
+      "username": "renato ",
+      "password": "12345",
+      "name": "renato",
+      "lastname": "reinoso",
+      "driver": false,
+      "email": "re.reinoso@duocuc.cl"
+    },
+    {
+      "id": 8,
+      "username": "renato",
+      "password": "12345",
+      "name": "renato",
+      "lastname": "reinoso",
+      "driver": false,
+      "email": "r"
+    },
+    {
+      "id": 9,
+      "username": "renato",
+      "password": "12345",
+      "name": "reinoso",
+      "lastname": "reinoso",
+      "driver": true,
+      "email": "a"
+    },
+    {
+      "id": 10,
+      "username": "renato",
+      "password": "12345",
+      "name": "renato",
+      "lastname": "reinoso",
+      "driver": true,
+      "email": "q"
+    },
+    {
+      "id": 11,
+      "username": "renato",
+      "password": "12345",
+      "name": "renato",
+      "lastname": "reinoso",
+      "driver": false,
+      "email": "a"
+    },
+    {
+      "id": 12,
+      "username": "r",
+      "password": "12345",
+      "name": "r",
+      "lastname": "r",
+      "driver": true,
+      "email": "r"
+    },
+    {
+      "id": 13,
+      "username": "r",
+      "password": "12345",
+      "name": "r",
+      "lastname": "r",
+      "driver": true,
+      "email": "r"
+    },
+    {
+      "id": 14,
+      "username": "r",
+      "password": "12345",
+      "name": "r",
+      "lastname": "r",
+      "driver": false,
+      "email": "r"
+    },
+    {
+      "id": 15,
+      "username": "r",
+      "password": "12345",
+      "name": "r",
+      "lastname": "r",
+      "driver": true,
+      "email": "r"
+    },
+    {
+      "id": 16,
+      "username": "rr",
+      "password": "12345",
+      "name": "r",
+      "lastname": "r",
+      "driver": true,
+      "email": "r"
+    },
+    {
+      "id": 17,
+      "username": "rr",
+      "password": "1",
+      "name": "r",
+      "lastname": "r",
+      "driver": true,
+      "email": "r"
+    },
+    {
+      "id": 18,
+      "username": "1",
+      "password": "1",
+      "name": "1",
+      "lastname": "1",
+      "driver": false,
+      "email": "11"
+    },
+    {
+      "id": 19,
+      "username": "renato",
+      "password": "1",
+      "name": "renato",
+      "lastname": "reinoso",
+      "driver": true,
+      "email": "re"
     }
   ],
-  "trips":[
+  "trips": [
     {
       "destination": "Puente Alto",
       "pricePerPerson": 2000,
@@ -63,7 +180,10 @@
       "totalCapacity": 4,
       "licensePlate": "AB-CD-12",
       "driverId": "1",
-      "passengerIds": ["5, 6"]
+      "passengerIds": [
+        "5, 6"
+      ],
+      "id": "9717"
     },
     {
       "destination": "La Florida",
@@ -72,7 +192,10 @@
       "totalCapacity": 4,
       "licensePlate": "EF-GH-34",
       "driverId": "3",
-      "passengerIds": ["2"]
+      "passengerIds": [
+        "2"
+      ],
+      "id": "9f1f"
     }
   ]
 }
