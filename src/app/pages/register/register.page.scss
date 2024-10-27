@@ -1,6 +1,6 @@
 #container {
     text-align: center;
-  
+    --color: #ffffff;
     position: absolute;
     top: 10%;
     left: 5%;
@@ -31,8 +31,12 @@
   }
   
   #container ion-button {
+    color: white;
     margin-top: 2%;
     margin-bottom: 4%;
+    --background: #69278c;
+    outline: none;
+    border: none;
   }
 
   #form {
@@ -46,6 +50,13 @@
 .toggle-text {
   margin-right: 10px;
   font-weight: bold;
+}
+
+
+ion-content{
+  ion-button{
+    --background: #69278c
+  }
 }
 
 

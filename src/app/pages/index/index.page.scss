@@ -1,19 +1,62 @@
 
 #container {
-    text-align: center;
-  
-    position: absolute;
-    top: 20%;
-    left: 5%;
-    right: 5%;
+  text-align: center;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+}
+ion-segment{
+  background-color: #69278c;
+}
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+  margin: 0;
+  margin: 5%;
+}
+
+ion-content{
+  ion-button{
+    --background: #69278c
+  }
+}
+
+ion-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Darker shadow */
+  margin: 25px 0; /* Increased margin for more space between cards */
+  padding: 4px;
+
+  ion-card-header {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff; /* Whiter text */
   }
 
-  #container p {
-    font-size: 16px;
-    line-height: 22px;
-  
-    color: #8c8c8c;
-  
-    margin: 0;
+  ion-card-content {
+    font-size: 14px;
+    color: #ffffff; /* Whiter text */
+    margin-bottom: 20px;
   }
-  
+
+}
+
+#cards ion-button{
+  --background: #69278c; 
+  --border-radius: 10px;
+  --color: #ffffff; /* Whiter text */
+  --padding-end: 20px;
+  --padding-start: 20px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Darker shadow */
+  --box-shadow-activated: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
+  --box-shadow-focused: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
+  --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
+  --box-shadow-pressed: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
+
+  margin-top: 15px;
+  margin-bottom: 1px;
+}
+

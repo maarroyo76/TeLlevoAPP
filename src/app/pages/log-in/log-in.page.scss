@@ -15,14 +15,13 @@
   #container p {
     font-size: 16px;
     line-height: 22px;
-  
     color: #8c8c8c;
-  
     margin: 0;
   }
   
   #container a {
     text-decoration: underline;
+    color: white;
   }
   
   #container h3{
@@ -31,11 +30,16 @@
   }
   
   #container ion-button {
+    color: white;
     margin-top: 2%;
     margin-bottom: 4%;
+    --background: #69278c;
+    outline: none;
+    border: none;
   }
   
   #form {
     margin-top: 5%;
     margin-bottom: 5%;
   }
+  

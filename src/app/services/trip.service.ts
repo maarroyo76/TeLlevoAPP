@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Trip } from '../models/trip';
 import { HttpClient } from '@angular/common/http';
+import { switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,4 +33,21 @@ export class TripService {
   editTrip(id: number, trip: Trip) {
     return this.http.patch<Trip>(this.apiURL + '/' + id, trip);
   }
+
+  addPassenger(id: number, passengerId: string) {
+  return this.http.get<Trip>(this.apiURL + '/' + id).pipe(
+    switchMap((trip) => {
+      if (trip) {
+        trip.passengerIds.push(passengerId);
+        return this.http.patch<Trip>(this.apiURL + '/' + id, {
+          passengerIds: trip.passengerIds,
+          totalPassengers: trip.totalPassengers + 1
+        });
+      } else {
+        throw new Error('Viaje no encontrado');
+      }
+    })
+  );
+}
+
 }

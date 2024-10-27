@@ -1,67 +1,76 @@
-<ion-header *ngIf="mostrarContenido" [translucent]="true">
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Te Llevo APP | Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="mostrarContenido" [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <div id="container">
     <div id="title">
       <h2>Bienvenido, {{ user?.username }}!</h2>
       <p>A la aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
     </div>
     <div>
-      <ion-button *ngIf="user?.driver" expand="full" (click)="mostrarFormularioViaje()">Registra tu Viaje</ion-button>
-      <ion-button *ngIf="!user?.driver" expand="full" (click)="mostrarViajesRegistrados()">Ver Viajes Disponibles</ion-button>
+      <ion-segment color="tertiary" [(ngModel)]="segment" value="mostrarViajes">
+        <ion-segment-button value="mostrarViajes">
+          <ion-label>Ver Viajes Disponibles</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="mostrarFormulario" *ngIf="user?.driver">
+          <ion-label>Registra tu Viaje</ion-label>
+        </ion-segment-button>
+      </ion-segment>
     </div>
-
-    <div *ngIf="mostrarFormulario">
+      
+    <div id="form" *ngIf="segment === 'mostrarFormulario'">
       <h4>Registrar Tu Viaje</h4>
-      <ion-item>
-        <ion-input label="Nombre del Chofer" labelPlacement="floating" [(ngModel)]="choferNombre" [readonly]="true"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Nombre Destino" labelPlacement="floating" [(ngModel)]="destino"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Matrícula" labelPlacement="floating" [(ngModel)]="matricula"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Horario" labelPlacement="floating" type="time" [(ngModel)]="horario"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Costo del Viaje" labelPlacement="floating" type="number" [(ngModel)]="costoPorPersona"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Cantidad de Asientos Disponibles" labelPlacement="floating" type="number" [(ngModel)]="asientosDisponibles"></ion-input>
-      </ion-item>
-      <ion-button expand="full" (click)="registrarViaje()">Registra Tu Viaje</ion-button>
-    </div>
-
-    <div *ngIf="mostrarViajes">
-      <h4>Viajes Disponibles</h4>
       <ion-list>
-        <ion-item *ngFor="let viaje of viajesRegistrados">
-          <ion-label>
-            <h2>{{ viaje.destination }}</h2>
-            <p>Costo: {{ viaje.pricePerPerson | currency }}</p>
-            <p>Matrícula: {{ viaje.licensePlate }}</p>
-            <p>Horario: {{ viaje.horario }}</p>
-            <p>Nombre del Chofer: {{ viaje.driverId }}</p>
-            <p>Asientos Disponibles: {{ viaje.totalCapacity - viaje.totalPassengers }}</p>
-          </ion-label>
-          <div>
-            <ion-button expand="full" (click)="registrarseEnViaje(viaje)">Unirse</ion-button>
-            <ion-button expand="full" (click)="verCapacidad(viaje)">Ver Capacidad</ion-button>
-          </div>
+        <ion-item>
+          <ion-input label="Nombre Destino" labelPlacement="floating" [(ngModel)]="trip.destination"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Matrícula" labelPlacement="floating" [(ngModel)]="trip.licensePlate"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Horario" labelPlacement="floating" type="time" [(ngModel)]="trip.horario"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Costo del Viaje" labelPlacement="floating" type="number" [(ngModel)]="trip.pricePerPerson"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Cantidad de Asientos Disponibles" labelPlacement="floating" type="number" [(ngModel)]="trip.totalCapacity"></ion-input>
         </ion-item>
       </ion-list>
+      <ion-button expand="block" (click)="registrarViaje()">Registra Tu Viaje</ion-button>
+    </div>
+
+    <div id="cards" *ngIf="segment === 'mostrarViajes'">
+      <h4>Viajes Disponibles</h4>
+      <ion-card *ngFor="let viaje of trips">
+      <ion-card-header>
+        <ion-card-title>{{ viaje.destination }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Costo: {{ viaje.pricePerPerson | currency }}</p>
+        <p>Matrícula: {{ viaje.licensePlate }}</p>
+        <p>Horario: {{ viaje.horario }}</p>
+        <p>Chofer: {{ viaje.driverName }}</p>
+        <p>Asientos Disponibles: {{ viaje.totalCapacity - viaje.totalPassengers }}</p>
+        <ion-button expand="block" (click)="registrarseEnViaje(viaje)">Unirse</ion-button>
+        <ion-button expand="block" (click)="verCapacidad(viaje)">Ver Capacidad</ion-button>
+      </ion-card-content>
+      </ion-card>
       <p *ngIf="viajeSeleccionado">Has seleccionado: {{ viajeSeleccionado.destination }}</p>
+      <br><br>
     </div>
   </div>
 </ion-content>
 
-<ion-footer>
+<ion-footer collapse="fade">
   <ion-toolbar>
     <ion-title id="footer">
       <ion-label>© 2024 TeLlevoAPP</ion-label>
