@@ -12,7 +12,7 @@
 <ion-content [fullscreen]="true" class="ion-padding">
   <div id="container">
     <div id="title">
-      <h2>Bienvenido, {{ user?.username }}!</h2>
+      <h2 id="welcome">Bienvenido, </h2><h2 id="name"> {{ user?.username }}!</h2>
       <p>A la aplicación de DuocUC que te permite llegar a tu casa de manera rápida y segura.</p>
     </div>
     <div>
@@ -60,6 +60,7 @@
         <p>Horario: {{ viaje.horario }}</p>
         <p>Chofer: {{ viaje.driverName }}</p>
         <p>Asientos Disponibles: {{ viaje.totalCapacity - viaje.totalPassengers }}</p>
+        <ion-button (click)="removeSelfFromTrip(viaje)">Cancelar Viaje</ion-button>
         <ion-button expand="block" (click)="registrarseEnViaje(viaje)">Unirse</ion-button>
         <ion-button expand="block" (click)="verCapacidad(viaje)">Ver Capacidad</ion-button>
       </ion-card-content>

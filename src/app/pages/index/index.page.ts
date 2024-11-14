@@ -47,11 +47,12 @@ export class IndexPage implements OnInit, ViewWillEnter {
 
   ngOnInit(): void {
     this.ionViewWillEnter();
+    console.log(this.user);
   }
 
   async ionViewWillEnter() {
     await this.storage.create();
-    const isAuthenticated = await this.loginService.isAuth(); // Asegúrate de usar await
+    const isAuthenticated = await this.loginService.isAuth(); 
 
     if (!isAuthenticated) {
       this.router.navigate(['/log-in']);
@@ -110,15 +111,15 @@ export class IndexPage implements OnInit, ViewWillEnter {
     if (this.validateForm()) {
       const nuevoViaje: Trip = {
         ...this.trip,
-        id: this.lastTripId + 1, // Asignar el nuevo ID
+        id: this.lastTripId + 1,
         totalPassengers: 0,
         passengerIds: [],
         driverId: this.user!.id,
         driverName: `${this.user!.name} ${this.user!.lastname}`,
       };
 
-      this.tripService.addTrip(nuevoViaje).subscribe(
-        (response) => {
+      this.tripService.addTrip(nuevoViaje).subscribe({
+        next: (response) => {
           if (response) {
             this.showToastMessage('Viaje registrado exitosamente', 'success');
             this.clear();
@@ -126,11 +127,11 @@ export class IndexPage implements OnInit, ViewWillEnter {
             this.loadTrips();
           }
         },
-        (error) => {
+        error: (error) => {
           console.error('Error al registrar el viaje:', error);
           this.showToastMessage('Error al registrar el viaje. Inténtalo de nuevo.', 'danger');
         }
-      );
+      });
     } else {
       this.showToastMessage('Error al registrar el viaje', 'danger');
     }
@@ -171,11 +172,11 @@ export class IndexPage implements OnInit, ViewWillEnter {
   }
 
   mostrarFormularioViaje() {
-    this.segment = 'mostrarFormulario'; // Cambia segment aquí
+    this.segment = 'mostrarFormulario'; 
   }
 
   mostrarViajesRegistrados() {
-    this.segment = 'mostrarViajes'; // Cambia segment aquí
+    this.segment = 'mostrarViajes';
   }
 
   async registrarseEnViaje(viaje: Trip) {
@@ -196,20 +197,20 @@ export class IndexPage implements OnInit, ViewWillEnter {
         }
           },
           {
-        text: 'Confirmar',
-        handler: (data) => {
-          this.metodoPago = data;
-          this.tripService.addPassenger(this.viajeSeleccionado!.id, this.user!.id.toString() || '')
-            .subscribe((response) => {
-          if (response) {
-            this.loadTrips();
-            this.showToastMessage(`Registrado exitosamente en el viaje con ${this.metodoPago}`, 'success');
-          }
-            }, (error) => {
-          this.showToastMessage('No se pudo registrar. Intenta de nuevo.', 'danger');
-            });
-        },
-          },
+            text: 'Confirmar',
+            handler: (data) => {
+              this.metodoPago = data;
+              this.tripService.addPassenger(this.viajeSeleccionado!.id, this.user!.id.toString() || '')
+                .subscribe((response) => {
+                  if (response) {
+                    this.loadTrips();
+                    this.showToastMessage(`Registrado exitosamente en el viaje con ${this.metodoPago}`, 'success');
+                  }
+                    }, (error) => {
+                  this.showToastMessage('No se pudo registrar. Intenta de nuevo.', 'danger');
+                    });
+            },
+              },
         ],
       });
       await alert.present();
@@ -231,6 +232,56 @@ export class IndexPage implements OnInit, ViewWillEnter {
       buttons: ['OK'],
     });
     await alert.present();
+  }
+
+  async removeSelfFromTrip(viaje: Trip) {
+    if (viaje.passengerIds.includes(this.user!.id.toString())) {
+      const alert = await this.alertController.create({
+        header: 'Cancelar Registro',
+        message: '¿Estás seguro de que quieres cancelar tu registro en este viaje?',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            handler: () => {
+              console.log('Eliminación cancelada');
+            }
+          },
+          {
+            text: 'Eliminar',
+            handler: () => {
+              // Si se confirma, elimina al usuario del viaje
+              this.confirmRemoveSelfFromTrip(viaje);
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    } else {
+      this.showToastMessage('No estás registrado en este viaje', 'danger');
+    }
+  }
+
+  confirmRemoveSelfFromTrip(trip: any) {
+    // Elimina al usuario de la lista de pasajeros
+    const updatedPassengerIds = trip.passengerIds.filter((id: string) => id !== this.user!.id.toString());
+    const updatedTrip = {
+      ...trip,
+      passengerIds: updatedPassengerIds,
+      totalPassengers: updatedPassengerIds.length
+    };
+
+    // Llama al servicio para actualizar el viaje en la API
+    this.tripService.removeUserFromTrip(trip.id, updatedTrip).subscribe({
+      next: (response) => {
+        if (response) {
+          this.loadTrips();
+          this.showToastMessage('Saliste del viaje exitosamente', 'success');
+        }
+      },
+      error: (error) => console.error('Error al salir del viaje:', error)
+    });
   }
 
   async logout() {

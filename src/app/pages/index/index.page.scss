@@ -1,3 +1,45 @@
+/* Estilos para el header y footer */
+ion-toolbar {
+  --background: #0A0908;
+}
+
+#header, #footer {
+  color: #FFF6F0;
+  
+}
+
+/* Fondo del contenido */
+ion-content {
+  --background: #0A0908;
+}
+
+ion-toolbar {
+  --background: #0A0908;
+  ion-buttons {
+    ion-button {
+      --color: #FFEE38;
+    }
+  }
+}
+#title {
+  display: inline-block;
+  align-items:center;
+  flex-direction: column;
+  text-align: center;
+}
+
+#welcome, #name {
+  display: inline;
+  margin: 0;
+}
+
+#welcome {
+  color: #FFF6F0;
+}
+
+#name {
+  color: #2CFF05;
+}
 
 #container {
   text-align: center;
@@ -24,19 +66,19 @@ ion-content{
 
 ion-card {
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Darker shadow */
-  margin: 25px 0; /* Increased margin for more space between cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  margin: 25px 0;
   padding: 4px;
 
-  ion-card-header {
+  ion-card-title {
     font-size: 18px;
     font-weight: bold;
-    color: #ffffff; /* Whiter text */
+    color: #2CFF05; 
   }
 
   ion-card-content {
     font-size: 14px;
-    color: #ffffff; /* Whiter text */
+    color: #FFF6F0; 
     margin-bottom: 20px;
   }
 
@@ -44,8 +86,9 @@ ion-card {
 
 #cards ion-button{
   --background: #69278c; 
+  --background-activated: #530080;
   --border-radius: 10px;
-  --color: #ffffff; /* Whiter text */
+  --color: #FFF6F0; 
   --padding-end: 20px;
   --padding-start: 20px;
   --padding-top: 10px;
@@ -59,4 +102,3 @@ ion-card {
   margin-top: 15px;
   margin-bottom: 1px;
 }
-

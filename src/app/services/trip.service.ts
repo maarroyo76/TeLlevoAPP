@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Trip } from '../models/trip';
 import { HttpClient } from '@angular/common/http';
-import { switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,10 @@ export class TripService {
   }
 
   addTrip(trip: Trip) {
-    return this.http.post<Trip>(this.apiURL, trip);
+    return this.http.post<Trip>(this.apiURL, {
+      ...trip,
+      id: trip.id.toString()
+    });
   }
 
   getTripById(id: number) {
@@ -32,6 +35,10 @@ export class TripService {
 
   editTrip(id: number, trip: Trip) {
     return this.http.patch<Trip>(this.apiURL + '/' + id, trip);
+  }
+
+  removeUserFromTrip(tripId: string, updatedTrip: any): Observable<any> {
+    return this.http.put(`${this.apiURL}/${tripId}`, updatedTrip);
   }
 
   addPassenger(id: number, passengerId: string) {
