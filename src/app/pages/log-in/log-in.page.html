@@ -2,6 +2,7 @@
   <ion-toolbar>
     <ion-title id="header">
       Te Llevo APP
+      <ion-icon name="car-outline"></ion-icon>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -16,6 +17,7 @@
     <ion-list id="form">
       <ion-item>
         <ion-input label="Nombre de Usuario" labelPlacement="stacked" placeholder="Ingresa tu username" [(ngModel)]="username"></ion-input>
+        <ion-icon name="person-outline"></ion-icon>
       </ion-item>
       <ion-item> 
         <ion-input type="password" label="Contraseña" labelPlacement="stacked" placeholder="Ingresa tu contraseña" [(ngModel)]="password">
@@ -24,7 +26,7 @@
       </ion-item>
     </ion-list>
     <div id="button">
-      <ion-button  expand="block" id="button" (click)="validateLogin()">Ingresar</ion-button>
+      <ion-button expand="block" id="button" (click)="validateLogin()">Ingresar</ion-button>
       <ion-button  expand="block" id="button"  (click)="goToRegister()" >Registrarse</ion-button>
       <p><a [routerLink]="['/recover']">Olvidaste tu contraseña?</a></p>
     </div>
@@ -33,7 +35,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-title id="footer">
-      <ion-label>© 2024 TeLlevoAPP</ion-label>
+      <ion-label>© 2024 TeLlevoAPP <ion-icon name="car-outline"></ion-icon></ion-label>
     </ion-title>
   </ion-toolbar>
 </ion-footer>
