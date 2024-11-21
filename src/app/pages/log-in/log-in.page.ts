@@ -2,6 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { ToastController, AnimationController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-log-in',
@@ -18,6 +19,7 @@ export class LogInPage {
     private router: Router,
     private loginService: LoginService,
     private animationController: AnimationController,
+    private loadingController: LoadingController
   ) {}
 
   ngAfterViewInit():void {
@@ -114,8 +116,14 @@ export class LogInPage {
       return;
     }
 
+    const loading = await this.loadingController.create({
+      message: 'Iniciando sesión...',
+    });
+    await loading.present();
+
     this.loginService.validateUser(this.username, this.password).subscribe(
       (users) => {
+        loading.dismiss();
         if (users.length > 0) {
           this.showToast('Bienvenido, ' + this.username + '!', 'success'); 
           this.clear();
@@ -125,6 +133,7 @@ export class LogInPage {
         }
       },
       (error) => {
+        this.loadingController.dismiss();
         this.showToast('Error en el servidor, intenta más tarde.', 'danger');
       }
     );

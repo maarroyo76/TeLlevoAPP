@@ -7,6 +7,7 @@ import { Trip } from 'src/app/models/trip';
 import { TripService } from 'src/app/services/trip.service';
 import { Storage } from '@ionic/storage-angular';
 import { ViewWillEnter } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-index',
@@ -42,7 +43,8 @@ export class IndexPage implements OnInit, ViewWillEnter {
     private loginService: LoginService,
     private router: Router,
     private tripService: TripService,
-    private storage: Storage
+    private storage: Storage,
+    public loading: LoadingController 
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +65,7 @@ export class IndexPage implements OnInit, ViewWillEnter {
   }
 
   async loadTrips() {
+    const loading = await this.presentLoading('Cargando viajes...');
     this.tripService.getTrips().subscribe(
       async (trips: Trip[]) => {
         this.trips = trips;
@@ -77,9 +80,11 @@ export class IndexPage implements OnInit, ViewWillEnter {
         for (let trip of this.trips) {
           trip.driverName = await this.getDriverName(trip.driverId);
         }
+        await loading.dismiss();
       },
-      (error) => {
+      async(error) => {
         console.error('Error al cargar los viajes:', error);
+        await loading.dismiss();
       }
     );
   }
@@ -109,6 +114,7 @@ export class IndexPage implements OnInit, ViewWillEnter {
 
   async registrarViaje() {
     if (this.validateForm()) {
+      const loading = await this.presentLoading('Registrando viaje...');
       const nuevoViaje: Trip = {
         ...this.trip,
         id: this.lastTripId + 1,
@@ -119,17 +125,19 @@ export class IndexPage implements OnInit, ViewWillEnter {
       };
 
       this.tripService.addTrip(nuevoViaje).subscribe({
-        next: (response) => {
+        next: async (response) => {
           if (response) {
             this.showToastMessage('Viaje registrado exitosamente', 'success');
             this.clear();
             this.mostrarFormulario = false;
-            this.loadTrips();
+            await this.loadTrips();
           }
+          await loading.dismiss();
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Error al registrar el viaje:', error);
           this.showToastMessage('Error al registrar el viaje. Inténtalo de nuevo.', 'danger');
+          await this.dismissLoading();
         }
       });
     } else {
@@ -263,8 +271,7 @@ export class IndexPage implements OnInit, ViewWillEnter {
     }
   }
 
-  confirmRemoveSelfFromTrip(trip: any) {
-    // Elimina al usuario de la lista de pasajeros
+   async confirmRemoveSelfFromTrip(trip: any) {
     const updatedPassengerIds = trip.passengerIds.filter((id: string) => id !== this.user!.id.toString());
     const updatedTrip = {
       ...trip,
@@ -272,21 +279,44 @@ export class IndexPage implements OnInit, ViewWillEnter {
       totalPassengers: updatedPassengerIds.length
     };
 
-    // Llama al servicio para actualizar el viaje en la API
     this.tripService.removeUserFromTrip(trip.id, updatedTrip).subscribe({
-      next: (response) => {
+      next: async(response) => {
         if (response) {
-          this.loadTrips();
+          await this.loadTrips();
           this.showToastMessage('Saliste del viaje exitosamente', 'success');
         }
       },
-      error: (error) => console.error('Error al salir del viaje:', error)
+      error:async (error) => {
+        console.error('Error al salir del viaje:', error);
+        this.showToastMessage('Error al salir del viaje. Inténtalo de nuevo.', 'danger');
+      }
     });
   }
 
   async logout() {
+    const loading = await this.loading.create({
+      message: 'Cerrando sesión...',
+      spinner: 'circles',
+    });
+    await loading.present();
+
     this.loginService.logOut();
     this.user = null;
     this.router.navigate(['/log-in']);
+    
+    loading.dismiss();
+  }
+
+  async presentLoading(message: string = 'Cargando...') {
+    const loading = await this.loading.create({
+      message,
+      spinner: 'circles',
+    });
+    await loading.present();
+    return loading;
+  }
+
+  async dismissLoading() {
+    await this.loading.dismiss();
   }
 }
