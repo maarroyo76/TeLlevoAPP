@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { TripService } from 'src/app/services/trip.service';
 import { Storage } from '@ionic/storage-angular';
 import { ViewWillEnter } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-index',
@@ -15,6 +16,8 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ['./index.page.scss'],
 })
 export class IndexPage implements OnInit, ViewWillEnter {
+  @ViewChild('map') mapElement!: ElementRef;
+
   user: User | null = null;
   metodoPago: string = '';
   viajeSeleccionado: Trip | null = null;
@@ -35,6 +38,9 @@ export class IndexPage implements OnInit, ViewWillEnter {
     driverId: 0,
     passengerIds: [],
     horario: '',
+    startPoint: [],
+    destinationPoint: [],
+    passengerDestinations: [],
   };
 
   constructor(
@@ -44,12 +50,12 @@ export class IndexPage implements OnInit, ViewWillEnter {
     private router: Router,
     private tripService: TripService,
     private storage: Storage,
-    public loading: LoadingController 
+    public loading: LoadingController,
+    public modalController: ModalController
   ) {}
 
   ngOnInit(): void {
     this.ionViewWillEnter();
-    console.log(this.user);
   }
 
   async ionViewWillEnter() {
@@ -64,17 +70,21 @@ export class IndexPage implements OnInit, ViewWillEnter {
     }
   }
 
+  goToViaje(viaje: Trip) {
+    const navigationExtras = { state: { viaje } }; 
+    this.router.navigate(['/viaje'], navigationExtras);
+  }
+
   async loadTrips() {
     const loading = await this.presentLoading('Cargando viajes...');
     this.tripService.getTrips().subscribe(
       async (trips: Trip[]) => {
         this.trips = trips;
 
-        // Obtener el último ID de viaje
         if (this.trips.length > 0) {
           this.lastTripId = Math.max(...this.trips.map(trip => trip.id));
         } else {
-          this.lastTripId = 0; // Si no hay viajes, iniciar desde 0
+          this.lastTripId = 0;
         }
 
         for (let trip of this.trips) {
@@ -157,6 +167,9 @@ export class IndexPage implements OnInit, ViewWillEnter {
       driverId: 0,
       passengerIds: [],
       horario: '',
+      startPoint: [],
+      destinationPoint: [],
+      passengerDestinations: [],
     };
   }
 
@@ -185,112 +198,6 @@ export class IndexPage implements OnInit, ViewWillEnter {
 
   mostrarViajesRegistrados() {
     this.segment = 'mostrarViajes';
-  }
-
-  async registrarseEnViaje(viaje: Trip) {
-    this.viajeSeleccionado = viaje;
-
-    if (this.viajeSeleccionado && this.viajeSeleccionado.totalCapacity > this.viajeSeleccionado.totalPassengers) {
-      const alert = await this.alertController.create({
-        header: 'Método de Pago',
-        message: 'Selecciona un método de pago:',
-        inputs: [
-          { name: 'metodoPago', type: 'radio', label: 'Efectivo', value: 'efectivo', checked: true },
-          { name: 'metodoPago', type: 'radio', label: 'Transferencia', value: 'transferencia' },
-        ],
-        buttons: [
-          {
-        text: 'Cancelar', role: 'cancel', handler: () => {
-          this.viajeSeleccionado = null;
-        }
-          },
-          {
-            text: 'Confirmar',
-            handler: (data) => {
-              this.metodoPago = data;
-              this.tripService.addPassenger(this.viajeSeleccionado!.id, this.user!.id.toString() || '')
-                .subscribe((response) => {
-                  if (response) {
-                    this.loadTrips();
-                    this.showToastMessage(`Registrado exitosamente en el viaje con ${this.metodoPago}`, 'success');
-                  }
-                    }, (error) => {
-                  this.showToastMessage('No se pudo registrar. Intenta de nuevo.', 'danger');
-                    });
-            },
-              },
-        ],
-      });
-      await alert.present();
-    } else {
-      this.showToastMessage('No hay asientos disponibles en este viaje.', 'danger');
-    }
-  }
-
-  async verCapacidad(viaje: Trip) {
-    const cantidadPasajeros = viaje.passengerIds.length;
-    const mensajeParticipantes = cantidadPasajeros > 0 
-      ? `Participantes: ${cantidadPasajeros}` 
-      : 'No hay pasajeros registrados aún';
-
-    const alert = await this.alertController.create({
-      header: 'Capacidad del Viaje',
-      message: `Asientos Disponibles: ${viaje.totalCapacity - viaje.totalPassengers}\n` +
-              mensajeParticipantes,
-      buttons: ['OK'],
-    });
-    await alert.present();
-  }
-
-  async removeSelfFromTrip(viaje: Trip) {
-    if (viaje.passengerIds.includes(this.user!.id.toString())) {
-      const alert = await this.alertController.create({
-        header: 'Cancelar Registro',
-        message: '¿Estás seguro de que quieres cancelar tu registro en este viaje?',
-        buttons: [
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-            handler: () => {
-              console.log('Eliminación cancelada');
-            }
-          },
-          {
-            text: 'Eliminar',
-            handler: () => {
-              // Si se confirma, elimina al usuario del viaje
-              this.confirmRemoveSelfFromTrip(viaje);
-            }
-          }
-        ]
-      });
-
-      await alert.present();
-    } else {
-      this.showToastMessage('No estás registrado en este viaje', 'danger');
-    }
-  }
-
-   async confirmRemoveSelfFromTrip(trip: any) {
-    const updatedPassengerIds = trip.passengerIds.filter((id: string) => id !== this.user!.id.toString());
-    const updatedTrip = {
-      ...trip,
-      passengerIds: updatedPassengerIds,
-      totalPassengers: updatedPassengerIds.length
-    };
-
-    this.tripService.removeUserFromTrip(trip.id, updatedTrip).subscribe({
-      next: async(response) => {
-        if (response) {
-          await this.loadTrips();
-          this.showToastMessage('Saliste del viaje exitosamente', 'success');
-        }
-      },
-      error:async (error) => {
-        console.error('Error al salir del viaje:', error);
-        this.showToastMessage('Error al salir del viaje. Inténtalo de nuevo.', 'danger');
-      }
-    });
   }
 
   async logout() {

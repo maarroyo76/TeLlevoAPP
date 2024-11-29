@@ -50,7 +50,7 @@
 
     <div id="cards" *ngIf="segment === 'mostrarViajes'">
       <h4>Viajes Disponibles</h4>
-      <ion-card *ngFor="let viaje of trips">
+      <ion-card *ngFor="let viaje of trips" button="true" (click)="goToViaje(viaje)">
       <ion-card-header>
         <ion-card-title>{{ viaje.destination }}</ion-card-title>
       </ion-card-header>
@@ -58,16 +58,10 @@
         <p>Costo: {{ viaje.pricePerPerson | currency }}</p>
         <p>Matrícula: {{ viaje.licensePlate }}</p>
         <p>Horario: {{ viaje.horario }}</p>
-        <p>Chofer: {{ viaje.driverName }}</p>
-        <p>Asientos Disponibles: {{ viaje.totalCapacity - viaje.totalPassengers }}</p>
-        <ion-button (click)="removeSelfFromTrip(viaje)">Cancelar Viaje</ion-button>
-        <ion-button expand="block" (click)="registrarseEnViaje(viaje)">Unirse</ion-button>
-        <ion-button expand="block" (click)="verCapacidad(viaje)">Ver Capacidad</ion-button>
       </ion-card-content>
       </ion-card>
-      <p *ngIf="viajeSeleccionado">Has seleccionado: {{ viajeSeleccionado.destination }}</p>
-      <br><br>
     </div>
+    <!-- <div id="map" style="height: 400px; width: 100%;">mapa</div> -->
   </div>
 </ion-content>
 

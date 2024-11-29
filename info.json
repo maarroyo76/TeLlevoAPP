@@ -66,7 +66,28 @@
       "totalCapacity": 4,
       "licensePlate": "AA-BB-11",
       "passengerIds": [],
-      "horario": "21:40"
+      "horario": "21:40",
+      "startPoint": {
+        "lat": -33.5000852,
+        "lng": -70.6162928
+      },
+      "destinationPoint": {
+        "lat": -33.4844772,
+        "lng": -70.5667533
+      },
+      "passengerDestinations": [
+        {
+          "id": "1",
+          "destination": "Av. Grecia 8735,",
+          "coords": {
+            "lat": -33.4766971,
+            "lng": -70.541595
+          }
+        },
+        {
+          "id": "1"
+        }
+      ]
     },
     {
       "id": "2",
@@ -74,14 +95,22 @@
       "driverId": "2",
       "destination": "San Bernardo",
       "pricePerPerson": 3500,
-      "totalPassengers": 3,
+      "totalPassengers": 2,
       "totalCapacity": 3,
       "licensePlate": "BB-CC-22",
       "passengerIds": [
         "5",
         "6"
       ],
-      "horario": "20:30"
+      "horario": "20:30",
+      "startPoint": {
+        "lat": -33.5000852,
+        "lng": -70.6162928
+      },
+      "destinationPoint": {
+        "lat": -33.6316638,
+        "lng": -70.7103613
+      }
     },
     {
       "id": "3",
@@ -95,7 +124,20 @@
       "passengerIds": [
         "4"
       ],
-      "horario": "22:00"
+      "horario": "22:00",
+      "startPoint": {
+        "lat": -33.5000852,
+        "lng": -70.6162928
+      },
+      "passengerDestinations": [
+        {
+          "id": "4",
+          "coords": {
+            "lat": -33.6316638,
+            "lng": -70.7103613
+          }
+        }
+      ]
     }
   ]
 }

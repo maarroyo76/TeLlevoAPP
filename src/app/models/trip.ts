@@ -9,4 +9,7 @@ export interface Trip {
   driverId: number;            // ID del conductor
   passengerIds: string[];      // Lista de IDs de los pasajeros
   horario: string;             // Horario de salida
+  startPoint: string[];          // Punto de partida
+  destinationPoint: string[];    // Punto de destino
+  passengerDestinations: { id: string;  coords: { lat: number; lng: number } }[];
 }

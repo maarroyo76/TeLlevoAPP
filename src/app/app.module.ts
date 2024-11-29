@@ -12,7 +12,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({ mode: 'ios'}),
     HttpClientModule,
     AppRoutingModule,
     IonicStorageModule.forRoot()],
