@@ -44,8 +44,13 @@ export class LoginService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const user = await this.storage.get(this.userKey);
-    return user ? user : null;
+    try {
+      const user = await this.storage.get(this.userKey);
+      return user ? user : null;
+    } catch (error) {
+      console.error('Error al obtener el usuario:', error);
+      return null;
+    }
   }
 
   async logOut() {

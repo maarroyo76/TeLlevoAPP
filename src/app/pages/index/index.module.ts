@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { IndexPageRoutingModule } from './index-routing.module';
 
 import { IndexPage } from './index.page';
-import { DestinationModalComponent } from '../viaje/destination-modal.component';
 
 @NgModule({
   imports: [
@@ -16,6 +15,6 @@ import { DestinationModalComponent } from '../viaje/destination-modal.component'
     IonicModule,
     IndexPageRoutingModule
   ],
-  declarations: [IndexPage, DestinationModalComponent],
+  declarations: [IndexPage],
 })
 export class IndexPageModule {}

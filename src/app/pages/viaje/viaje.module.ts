@@ -1,20 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 
 import { ViajePageRoutingModule } from './viaje-routing.module';
 
 import { ViajePage } from './viaje.page';
+import { DestinationModalComponent } from './destination-modal.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     IonicModule,
-    ViajePageRoutingModule
+    FormsModule,
+    ViajePageRoutingModule,
   ],
-  declarations: [ViajePage]
+  declarations: [ViajePage, DestinationModalComponent],
 })
 export class ViajePageModule {}

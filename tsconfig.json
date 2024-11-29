@@ -27,7 +27,8 @@
       "node_modules/@types"
     ],
     "types": [
-      "node"
+      "node",
+      "google.maps"
     ]
   },
   "angularCompilerOptions": {

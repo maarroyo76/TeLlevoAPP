@@ -200,18 +200,8 @@ export class IndexPage implements OnInit, ViewWillEnter {
     this.segment = 'mostrarViajes';
   }
 
-  async logout() {
-    const loading = await this.loading.create({
-      message: 'Cerrando sesión...',
-      spinner: 'circles',
-    });
-    await loading.present();
-
-    this.loginService.logOut();
-    this.user = null;
-    this.router.navigate(['/log-in']);
-    
-    loading.dismiss();
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 
   async presentLoading(message: string = 'Cargando...') {
