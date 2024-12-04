@@ -60,15 +60,16 @@ ion-segment{
 
 ion-content{
   ion-button{
-    --background: #69278c
+    --background: #69278c;
+    --color: #FFF6F0;
   }
 }
 
 ion-card {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-  margin: 25px 0;
-  padding: 4px;
+  margin: 25px 10;
+  padding: 0px;
 
   ion-card-title {
     font-size: 18px;
@@ -79,7 +80,7 @@ ion-card {
   ion-card-content {
     font-size: 14px;
     color: #FFF6F0; 
-    margin-bottom: 20px;
+    margin-bottom: 0px;
   }
 
 }
@@ -89,16 +90,25 @@ ion-card {
   --background-activated: #530080;
   --border-radius: 10px;
   --color: #FFF6F0; 
-  --padding-end: 20px;
-  --padding-start: 20px;
-  --padding-top: 10px;
-  --padding-bottom: 10px;
+  --padding-end: 2px;
+  --padding-start: 2px;
+  --padding-top: 1px;
+  --padding-bottom: 1px;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Darker shadow */
   --box-shadow-activated: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
   --box-shadow-focused: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
   --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
   --box-shadow-pressed: 0 8px 16px rgba(0, 0, 0, 0.3); /* Darker shadow */
 
-  margin-top: 15px;
+  margin-top: 1px;
   margin-bottom: 1px;
+}
+
+#map {
+  height: 400px; 
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 25px 0;
+  
 }

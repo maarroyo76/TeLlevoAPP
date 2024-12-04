@@ -44,8 +44,13 @@ export class LoginService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const user = await this.storage.get(this.userKey);
-    return user ? user : null;
+    try {
+      const user = await this.storage.get(this.userKey);
+      return user ? user : null;
+    } catch (error) {
+      console.error('Error al obtener el usuario:', error);
+      return null;
+    }
   }
 
   async logOut() {
@@ -67,5 +72,14 @@ export class LoginService {
 
   changePassword(id: number, newPassword: string) {
     return this.http.patch<User>('http://localhost:3000/users/' + id, { password: newPassword });
+  }
+
+  updateUser(id: number, user: User) {
+    return this.http.put<User>('http://localhost:3000/users/' + id, user);
+  }
+
+  async updateStorage(user: any): Promise<void> {
+    await this.storage.set(this.userKey, user);
+    this.currentUser = user;
   }
 }

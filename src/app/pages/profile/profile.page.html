@@ -1,0 +1,88 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>TeLlevoApp | Perfil</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{user.name}} {{user.lastname}}</ion-card-title>
+        <ion-card-subtitle>{{user.username}}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-accordion-group>
+    <ion-accordion value="first">
+      <ion-item slot="header" color="light">
+        <ion-label>Editar Perfil</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input type="text" [(ngModel)]="user.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Apellido</ion-label>
+            <ion-input type="text" [(ngModel)]="user.lastname"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Nombre de Usuario</ion-label>
+            <ion-input type="text" [(ngModel)]="user.username"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Correo Electrónico</ion-label>
+            <ion-input type="email" [(ngModel)]="user.email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>¿Tienes Auto?</ion-label>
+            <ion-toggle slot="end" class="custom-toggle" [(ngModel)]="user.driver"></ion-toggle>
+            <span class="toggle-text">{{ user.driver ? 'Sí' : 'No' }}</span>
+            <ion-icon slot="end" name="car-outline"></ion-icon>
+          </ion-item>
+          <ion-button expand="block" (click)="confirmUpdateProfile()">
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+              Guardar Cambios
+          </ion-button>
+        </ion-list>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header" color="light">
+        <ion-label>Cambiar contraseña</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Contraseña Actual</ion-label>
+            <ion-input type="password" [(ngModel)]="oldPassword"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Nueva Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="newPassword"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Confirmar Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="confirmPassword"></ion-input>
+          </ion-item>
+          <ion-button expand="block" (click)="confirmChangePassword()">
+            <ion-icon name="key-outline" slot="start"></ion-icon>
+              Cambiar Contraseña
+          </ion-button>
+        </ion-list>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+    <ion-button expand="block" class="logout-btn" (click)="logOut()" id="delete">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar Sesión
+    </ion-button>
+  </div>
+</ion-content>

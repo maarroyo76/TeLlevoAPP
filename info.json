@@ -62,11 +62,23 @@
       "driverId": "1",
       "destination": "Peñalolen",
       "pricePerPerson": 3000,
-      "totalPassengers": 0,
+      "totalPassengers": 2,
       "totalCapacity": 4,
       "licensePlate": "AA-BB-11",
-      "passengerIds": [],
-      "horario": "21:40"
+      "status": "Finalizado",
+      "passengerIds": [
+        "4",
+        "5"
+      ],
+      "horario": "19:00",
+      "startPoint": {
+        "lat": -33.5000852,
+        "lng": -70.6162928
+      },
+      "destinationPoint": {
+        "lat": -33.4748015,
+        "lng": -70.5438142
+      }
     },
     {
       "id": "2",
@@ -74,14 +86,31 @@
       "driverId": "2",
       "destination": "San Bernardo",
       "pricePerPerson": 3500,
-      "totalPassengers": 3,
+      "totalPassengers": 1,
       "totalCapacity": 3,
       "licensePlate": "BB-CC-22",
+      "status": "Progrmado",
       "passengerIds": [
-        "5",
-        "6"
+        "5"
       ],
-      "horario": "20:30"
+      "horario": "20:30",
+      "startPoint": {
+        "lat": -33.5000852,
+        "lng": -70.6162928
+      },
+      "destinationPoint": {
+        "lat": -33.6316638,
+        "lng": -70.7103613
+      },
+      "passengerDestinations": [
+        {
+          "id": "5",
+          "coords": {
+            "lat": -33.6202589,
+            "lng": -70.6984466
+          }
+        }
+      ]
     },
     {
       "id": "3",
@@ -89,13 +118,27 @@
       "driverId": "3",
       "destination": "Las Condes",
       "pricePerPerson": 4000,
-      "totalPassengers": 1,
+      "totalPassengers": 3,
       "totalCapacity": 4,
       "licensePlate": "CC-DD-33",
+      "status": "Progrmado",
       "passengerIds": [
         "4"
       ],
-      "horario": "22:00"
+      "horario": "22:00",
+      "startPoint": {
+        "lat": -33.5000852,
+        "lng": -70.6162928
+      },
+      "passengerDestinations": [
+        {
+          "id": "4",
+          "coords": {
+            "lat": -33.6316638,
+            "lng": -70.7103613
+          }
+        }
+      ]
     }
   ]
 }

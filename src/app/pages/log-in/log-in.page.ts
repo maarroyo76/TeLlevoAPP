@@ -127,7 +127,7 @@ export class LogInPage {
         if (users.length > 0) {
           this.showToast('Bienvenido, ' + this.username + '!', 'success'); 
           this.clear();
-          this.router.navigate(['/index']);
+          this.router.navigate(['/home']);
         } else {
           this.showToast('Credenciales inválidas!', 'danger');
         }

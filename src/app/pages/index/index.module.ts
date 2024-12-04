@@ -15,6 +15,6 @@ import { IndexPage } from './index.page';
     IonicModule,
     IndexPageRoutingModule
   ],
-  declarations: [IndexPage]
+  declarations: [IndexPage],
 })
 export class IndexPageModule {}

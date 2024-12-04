@@ -25,6 +25,10 @@ export class TripService {
     });
   }
 
+  deleteTrip(id: number) {
+    return this.http.delete<Trip>(this.apiURL + '/' + id);
+  }
+
   getTripById(id: number) {
     return this.http.get<Trip>(this.apiURL + '/' + id);
   }
@@ -41,20 +45,38 @@ export class TripService {
     return this.http.put(`${this.apiURL}/${tripId}`, updatedTrip);
   }
 
-  addPassenger(id: number, passengerId: string) {
-  return this.http.get<Trip>(this.apiURL + '/' + id).pipe(
-    switchMap((trip) => {
-      if (trip) {
-        trip.passengerIds.push(passengerId);
-        return this.http.patch<Trip>(this.apiURL + '/' + id, {
-          passengerIds: trip.passengerIds,
-          totalPassengers: trip.totalPassengers + 1
-        });
-      } else {
-        throw new Error('Viaje no encontrado');
-      }
-    })
-  );
-}
+  addPassenger(id: number, passengerId: string, destination: string, coords: { lat: number; lng: number }) {
+    return this.http.get<Trip>(this.apiURL + '/' + id).pipe(
+      switchMap((trip) => {
+        if (trip) {
+          const passengerData = {
+            id: passengerId,
+            destination,
+            coords
+          };
+
+          const updatedDestinations = trip.passengerDestinations || [];
+          updatedDestinations.push(passengerData);
+
+          return this.http.patch<Trip>(this.apiURL + '/' + id, {
+            passengerIds: [...trip.passengerIds, passengerId],
+            passengerDestinations: updatedDestinations,
+            totalPassengers: trip.totalPassengers + 1
+          });
+        } else {
+          throw new Error('Viaje no encontrado');
+        }
+      })
+    );
+  }
+
+  startTrip(id: number) {
+    return this.http.patch<Trip>(this.apiURL + '/' + id, { status: 'Iniciado' });
+  }
+
+  endTrip(id: number) {
+    return this.http.patch<Trip>(this.apiURL + '/' + id, { status: 'Finalizado' });
+  }
+
 
 }

@@ -1,9 +1,14 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'TeLlevoApp',
-  webDir: 'www'
+  appId: 'com.tellevo.app',
+  appName: 'Te Llevo APP',
+  webDir: 'www',
+  plugins: {
+    GoogleMaps: {
+      apiKey: 'AIzaSyDeLWnIYTm82oiKpfqz42CAjxWnP9gHjLs',
+    },
+  },
 };
 
 export default config;

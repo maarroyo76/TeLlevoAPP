@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Seleccionar destino</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div id="container">
+        <h2>Ingresa tu destino</h2>
+        <ion-item>
+          <ion-label position="stacked">Destino</ion-label>
+          <input #destinationInput [(ngModel)]="destination" type="text" placeholder="Ingresa tu destino" />
+        </ion-item>
+
+        <ion-button expand="block" (click)="confirmDestination()">Confirmar</ion-button>
+    </div>
+</ion-content>
+

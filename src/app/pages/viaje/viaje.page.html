@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>TeLlevoApp | Viaje</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()" aria-label="Regresar">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" id="title">
+        <h1 id="welcome">Viaje a:</h1><h1 id="name"> {{viaje?.destination}} </h1>
+        <h3>Datos del viaje</h3>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label>Conductor</ion-label>
+            <ion-note slot="end">{{viaje?.driverName}}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Matrícula</ion-label>
+            <ion-note slot="end">{{viaje?.licensePlate}}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Horario</ion-label>
+            <ion-note slot="end">{{viaje?.horario}}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Costo del viaje</ion-label>
+            <ion-note slot="end">{{viaje?.pricePerPerson | currency}}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Cantidad de asientos</ion-label>
+            <ion-note slot="end">{{viaje?.totalCapacity}}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Asientos disponibles</ion-label>
+            <ion-note slot="end">{{availableSeats}}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Estado del viaje</ion-label>
+            <ion-note slot="end"> {{viaje?.status}} </ion-note>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="user?.id !== viaje?.driverId">
+      <ion-col size="12">
+        <ion-button expand="block" [disabled]="isTripFinished()" [disabled]="isUserRegistered()" (click)="reservarViaje()">Reservar Asiento</ion-button>
+        <ion-button expand="block" [disabled]="!isUserRegistered()" (click)="removeSelfFromTrip(viaje!)">Salir del viaje</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="user?.id === viaje?.driverId">
+      <ion-col size="12">
+        <ion-button *ngIf="!isTripStarted" expand="block" (click)="startTrip()">Iniciar Viaje</ion-button>
+        <ion-button *ngIf="isTripStarted" expand="block" (click)="endTrip()">Terminar Viaje</ion-button>
+        <ion-button expand="block" id="delete" (click)="deleteTrip()">Eliminar Viaje</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div id="map" style="height: 400px; width: 100%;"></div>
+</ion-content>
