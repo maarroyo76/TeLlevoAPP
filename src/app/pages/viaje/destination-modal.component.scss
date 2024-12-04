@@ -68,12 +68,19 @@ h2, h3 {
 #form {
   margin-top: 5%;
   margin-bottom: 5%;
-  ion-input {
-  --background: black;
-  --border-color: black;
-  --border-radius: 4px; /* O cualquier valor que prefieras */
-  --border-width: 1px;  /* Haciendo el borde visible */
-  --padding-top: 0;
+    ion-input {
+    --background: black;
+    --border-color: black;
+    --border-radius: 4px; /* O cualquier valor que prefieras */
+    --border-width: 1px;  /* Haciendo el borde visible */
+    --padding-top: 0;
+  }
 }
 
+input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 16px;
 }

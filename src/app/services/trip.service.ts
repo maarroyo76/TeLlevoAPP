@@ -70,5 +70,13 @@ export class TripService {
     );
   }
 
+  startTrip(id: number) {
+    return this.http.patch<Trip>(this.apiURL + '/' + id, { status: 'Iniciado' });
+  }
+
+  endTrip(id: number) {
+    return this.http.patch<Trip>(this.apiURL + '/' + id, { status: 'Finalizado' });
+  }
+
 
 }

@@ -35,11 +35,12 @@ export class IndexPage implements OnInit, ViewWillEnter {
     totalPassengers: 0,
     totalCapacity: 0,
     licensePlate: '',
+    status: 'Programado',
     driverId: 0,
     passengerIds: [],
     horario: '',
-    startPoint: [],
-    destinationPoint: [],
+    startPoint: { lat: 0, lng: 0 }, // Coordenadas iniciales predeterminadas
+    destinationPoint: { lat: 0, lng: 0 }, // Coordenadas de destino predeterminadas
     passengerDestinations: [],
   };
 
@@ -164,11 +165,12 @@ export class IndexPage implements OnInit, ViewWillEnter {
       totalPassengers: 0,
       totalCapacity: 0,
       licensePlate: '',
+      status: 'Programado',
       driverId: 0,
       passengerIds: [],
       horario: '',
-      startPoint: [],
-      destinationPoint: [],
+      startPoint: { lat: 0, lng: 0 }, // Coordenadas iniciales predeterminadas
+      destinationPoint: { lat: 0, lng: 0 }, // Coordenadas de destino predeterminadas
       passengerDestinations: [],
     };
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -13,11 +13,16 @@ export class ProfilePage implements OnInit {
 
   user: any = {};
 
+  newPassword!: string;
+  oldPassword!: string;
+  confirmPassword!: string;
+
   constructor(
     private router: Router,
     private loginService: LoginService,
     private loading: LoadingController,
-    private alert: AlertController
+    private alert: AlertController,
+    private toast: ToastController
   ) { }
 
 
@@ -25,6 +30,67 @@ export class ProfilePage implements OnInit {
     this.user = await this.loginService.getCurrentUser();
   }
 
+  private  async updateProfile() {
+    const userId = this.user.id;
+    this.loginService.updateUser(userId, this.user).subscribe(async (user: any) => {
+      await this.loginService.updateStorage(user);
+      this.user = user;
+      await this.createToast('Perfil actualizado correctamente.', 'success');
+    });
+  }
+
+  private async changePassword() {
+    if (this.oldPassword === this.user.password && this.newPassword === this.confirmPassword) {
+      this.user.password = this.newPassword;
+      const userId = this.user.id;
+      this.loginService.updateUser(userId, this.user).subscribe(async (user: any) => {
+        await this.loginService.updateStorage(user);
+        this.user = user;
+        await this.createToast('Contraseña actualizada correctamente.', 'success');
+      });
+    } else {
+      await this.presentAlert('Error', 'La contraseña actual no coincide.');
+    }
+  }
+  async confirmChangePassword() {
+    const alert = await this.alert.create({
+      header: 'Confirmar cambio de contraseña',
+      message: '¿Estás seguro que deseas cambiar tu contraseña?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        }, {
+          text: 'Aceptar',
+          handler: async () => {
+            this.changePassword();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async confirmUpdateProfile() {
+    const alert = await this.alert.create({
+      header: 'Confirmar actualización',
+      message: '¿Estás seguro que deseas actualizar tu perfil?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        }, {
+          text: 'Aceptar',
+          handler: async () => {
+            this.updateProfile();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
   goBack() {
     this.router.navigate(['/home']);
@@ -61,6 +127,15 @@ export class ProfilePage implements OnInit {
     });
     await loading.present();
     return loading;
+  }
+
+  async createToast(message: string, color: string) {
+    const toast = await this.toast.create({
+      message,
+      duration: 2000,
+      color,
+    });
+    await toast.present();
   }
 
   async presentAlert(header: string, message: string) {

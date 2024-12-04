@@ -31,18 +31,25 @@ export class ViajePage implements OnInit {
     private storage: Storage,
     private loginService: LoginService,
     private tripService: TripService
-  ) { }
+  ) { 
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+   }
 
   async ngOnInit() {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.viaje = navigation?.extras.state['viaje'];
+    try {
+      const navigation = this.router.getCurrentNavigation();
+      if (navigation?.extras.state && navigation.extras.state['viaje']) {
+        this.viaje = navigation.extras.state['viaje'];
+      } else {
+        console.warn('No se encontraron datos del viaje. Redirigiendo al home...');
+        this.router.navigate(['/home']);
+      }
       this.user = await this.loginService.getCurrentUser();
-    }else {
+      await this.loadViaje();
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
       this.router.navigate(['/home']);
     }
-    this.loadViaje();
-    this.checkTripStatus();
   }
 
   ngAfterViewInit() {
@@ -54,6 +61,7 @@ export class ViajePage implements OnInit {
       next: (response) => {
         this.viaje = response;
         this.calculateAvailableSeats();
+        this.loadMap();
       },
       error: (error) => {
         console.error('Error al cargar el viaje:', error);
@@ -68,70 +76,69 @@ export class ViajePage implements OnInit {
     return this.viaje.passengerIds.includes(this.user.id.toString());
   }
 
+  isTripFinished(): boolean {
+    return this.viaje!.status === 'finalizado';
+  }
+
   calculateAvailableSeats() {
     this.availableSeats = this.viaje!.totalCapacity! - this.viaje!.totalPassengers!;
   }
 
-  async checkTripStatus() {
-    const tripStatus = await this.storage.get('tripStatus');
-    if (tripStatus && tripStatus.id === this.viaje?.id && tripStatus.isStarted) {
-      this.isTripStarted = true;
-    }
-  }
-
   async reservarViaje() {
     if (this.availableSeats > 0) {
-      const modal = await this.modalCtrl.create({
-        component: DestinationModalComponent,
-      });
-      await modal.present();
+      try {
+        const modal = await this.modalCtrl.create({
+          component: DestinationModalComponent,
+        });
+        await modal.present();
 
-      const { data, role } = await modal.onDidDismiss();
+        const { data, role } = await modal.onDidDismiss();
 
-      if (role === 'confirm') {
-        const destino = data;
-        const coords = await this.getCoordinatesFromAddress(destino);
+        if (role === 'confirm' && data?.coords && data?.destination) {
+          const destino = data.destination;
+          const coords = data.coords;
 
-        if (!coords) {
-          this.createToast('No se pudieron obtener las coordenadas del destino.', 'danger');
-          return;
+          const alert = await this.alertCtrl.create({
+            header: 'Método de Pago',
+            message: 'Selecciona un método de pago:',
+            inputs: [
+              { name: 'metodoPago', type: 'radio', label: 'Efectivo', value: 'efectivo', checked: true },
+              { name: 'metodoPago', type: 'radio', label: 'Transferencia', value: 'transferencia' },
+            ],
+            buttons: [
+              {
+                text: 'Cancelar',
+                role: 'cancel',
+                handler: () => {
+                  this.createToast('Reservación cancelada', 'danger');
+                },
+              },
+              {
+                text: 'Aceptar',
+                handler: (data: any) => {
+                  this.metodoPago = data.metodoPago;
+                  this.tripService.addPassenger(this.viaje!.id, this.user!.id.toString(), destino, coords)
+                    .subscribe({
+                      next: () => {
+                        this.loadViaje();
+                        this.createToast(`Registrado exitosamente en el viaje!`, 'success');
+                      },
+                      error: () => {
+                        this.createToast('No se pudo registrar. Intenta de nuevo.', 'danger');
+                      },
+                    });
+                },
+              },
+            ],
+          });
+          await alert.present();
+        } else {
+          this.createToast('No se seleccionó un destino válido.', 'danger');
         }
+      } catch (error) {
+        console.error('Error al reservar viaje:', error);
+        this.createToast('Ocurrió un error al intentar reservar el viaje.', 'danger');
       }
-
-      const alert = await this.alertCtrl.create({
-        header: 'Método de Pago',
-        message: 'Selecciona un método de pago:',
-        inputs: [
-          { name: 'metodoPago', type: 'radio', label: 'Efectivo', value: 'efectivo', checked: true },
-          { name: 'metodoPago', type: 'radio', label: 'Transferencia', value: 'transferencia' },
-        ],
-        buttons: [
-          {
-            text: 'Cancelar', role: 'cancel', handler: () => {
-              this.createToast('Reservación cancelada', 'danger');
-            }
-          },
-          {
-            text: 'Aceptar',
-            handler: (data: any) => {
-              this.metodoPago = data.metodoPago;
-              this.tripService.addPassenger(this.viaje!.id, this.user!.id.toString(), this.destino, this.coords)
-                .subscribe({
-                  next: (response: any) => {
-                    if (response) {
-                      this.loadViaje();
-                      this.createToast(`Registrado exitosamente en el viaje con ${this.metodoPago}`, 'success');
-                    }
-                  },
-                  error: (error: any) => {
-                    this.createToast('No se pudo registrar. Intenta de nuevo.', 'danger');
-                  }
-                });
-            }
-          }
-        ]
-      });
-      await alert.present();
     } else {
       this.createToast('No hay asientos disponibles en este viaje.', 'danger');
     }
@@ -165,24 +172,32 @@ export class ViajePage implements OnInit {
     }
   }
 
-   async confirmRemoveSelfFromTrip(trip: any) {
-    const updatedPassengerIds = trip.passengerIds.filter((id: string) => id !== this.user!.id.toString());
+  async confirmRemoveSelfFromTrip(trip: any) {
+    const userId = this.user!.id.toString();
+    const updatedPassengerIds = trip.passengerIds.filter((id: string) => id !== userId);
+
+    const updatedPassengerDestinations = trip.passengerDestinations.filter(
+      (destination: { id: string; coords: { lat: number; lng: number } }) => destination.id !== userId
+    );
+
     const updatedTrip = {
       ...trip,
       passengerIds: updatedPassengerIds,
-      totalPassengers: updatedPassengerIds.length
+      passengerDestinations: updatedPassengerDestinations,
+      totalPassengers: updatedPassengerIds.length,
     };
 
     this.tripService.removeUserFromTrip(trip.id, updatedTrip).subscribe({
-      next: async(response) => {
+      next: async (response) => {
         if (response) {
+          this.loadViaje();
           this.createToast('Saliste del viaje exitosamente', 'success');
         }
       },
-      error:async (error) => {
+      error: async (error) => {
         console.error('Error al salir del viaje:', error);
         this.createToast('Error al salir del viaje. Inténtalo de nuevo.', 'danger');
-      }
+      },
     });
   }
 
@@ -194,13 +209,20 @@ export class ViajePage implements OnInit {
         {
           text: 'Cancelar',
           role: 'cancel',
-          handler: () => console.log('Inicio de viaje cancelado'),
+          handler: () => this.createToast('Inicio cancelado', 'caution'),
         },
         {
           text: 'Iniciar',
           handler: async () => {
-            this.isTripStarted = true;
-            await this.storage.set('tripStatus',{id: this.viaje?.id, status: 'started'});
+            this.tripService.startTrip(this.viaje!.id).subscribe({
+              next: () => {
+                this.isTripStarted = true;
+              },
+              error: (error) => {
+                console.error('Error al iniciar el viaje:', error);
+                this.createToast('No se pudo iniciar el viaje. Intenta de nuevo.', 'danger');
+              },
+            });
             this.createToast('El viaje ha comenzado', 'success');
           },
         },
@@ -212,17 +234,26 @@ export class ViajePage implements OnInit {
   async endTrip() {
     const alert = await this.alertCtrl.create({
       header: 'Terminar Viaje',
-      message: '¿Estás seguro de que quieres terminar este viaje? Esto lo eliminará definitivamente.',
+      message: '¿Estás seguro de que quieres terminar este viaje?',
       buttons: [
         {
           text: 'Cancelar',
           role: 'cancel',
-          handler: () => console.log('Finalización cancelada'),
+          handler: () => this.createToast('Finalización cancelada', 'caution'),
         },
         {
           text: 'Terminar',
           handler: () => {
-            this.deleteTrip();
+            this.tripService.endTrip(this.viaje!.id).subscribe({
+              next: () => {
+                this.isTripStarted = false;
+              },
+              error: (error) => {
+                console.error('Error al finalizar el viaje:', error);
+                this.createToast('No se pudo finalizar el viaje. Intenta de nuevo.', 'danger');
+              },
+            });
+            this.createToast('El viaje ha finalizado', 'success');
           },
         },
       ],
@@ -277,18 +308,64 @@ export class ViajePage implements OnInit {
 
   loadMap() {
     const mapElement = document.getElementById('map') as HTMLElement;
-    if (mapElement) {
-      const mapOptions: google.maps.MapOptions = {
-        center: { lat: -33.5000852, lng: -70.6162928 }, 
-        zoom: 18,
-      };
-      const map = new google.maps.Map(mapElement, mapOptions);
-      
-    } else {
-      console.error('Elemento del mapa no encontrado');
+
+    if (!mapElement || !this.viaje) {
+      console.error('No se encontró el elemento del mapa o los datos del viaje no están disponibles.');
+      return;
+    }
+
+    const startPoint = this.viaje.startPoint;
+    const destinationPoint = this.viaje.destinationPoint;
+
+    // Validar las coordenadas de startPoint y destinationPoint
+    if (
+      !startPoint || typeof startPoint.lat !== 'number' || typeof startPoint.lng !== 'number' ||
+      !destinationPoint || typeof destinationPoint.lat !== 'number' || typeof destinationPoint.lng !== 'number'
+    ) {
+      console.error('Coordenadas inválidas:', { startPoint, destinationPoint });
+      return;
+    }
+
+    // Configuración del mapa
+    const mapOptions: google.maps.MapOptions = {
+      center: {
+        lat: startPoint.lat,
+        lng: startPoint.lng,
+      },
+      zoom: 12,
+    };
+
+    const map = new google.maps.Map(mapElement, mapOptions);
+
+    // Función para agregar marcadores avanzados
+    const addAdvancedMarker = (position: google.maps.LatLngLiteral, title: string) => {
+      new google.maps.Marker({
+        position,
+        map,
+        title,
+      });
+    };
+
+    // Agregar marcador para el punto de partida
+    addAdvancedMarker({ lat: startPoint.lat, lng: startPoint.lng }, 'Punto de partida');
+
+    // Agregar marcador para el destino
+    addAdvancedMarker({ lat: destinationPoint.lat, lng: destinationPoint.lng }, 'Destino final');
+
+    // Agregar marcadores para los destinos de los pasajeros
+    if (this.viaje.passengerDestinations && this.viaje.passengerDestinations.length > 0) {
+      this.viaje.passengerDestinations.forEach(dest => {
+        if (dest.coords && typeof dest.coords.lat === 'number' && typeof dest.coords.lng === 'number') {
+          addAdvancedMarker(
+          { lat: dest.coords.lat, lng: dest.coords.lng },
+          `Destino de pasajero ID: ${dest.id}`
+          );
+        }
+      });
     }
   }
-  
+
+
   async createToast(message: string, color: string) {
     const toast = await this.toastCtrl.create({
       message,

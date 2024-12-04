@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Viaje</ion-title>
+    <ion-title>TeLlevoApp | Viaje</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()" aria-label="Regresar">
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
@@ -44,12 +44,16 @@
             <ion-label>Asientos disponibles</ion-label>
             <ion-note slot="end">{{availableSeats}}</ion-note>
           </ion-item>
+          <ion-item>
+            <ion-label>Estado del viaje</ion-label>
+            <ion-note slot="end"> {{viaje?.status}} </ion-note>
+          </ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="user?.id !== viaje?.driverId">
       <ion-col size="12">
-        <ion-button expand="block" (click)="reservarViaje()">Reservar Asiento</ion-button>
+        <ion-button expand="block" [disabled]="isTripFinished()" [disabled]="isUserRegistered()" (click)="reservarViaje()">Reservar Asiento</ion-button>
         <ion-button expand="block" [disabled]="!isUserRegistered()" (click)="removeSelfFromTrip(viaje!)">Salir del viaje</ion-button>
       </ion-col>
     </ion-row>

@@ -73,4 +73,13 @@ export class LoginService {
   changePassword(id: number, newPassword: string) {
     return this.http.patch<User>('http://localhost:3000/users/' + id, { password: newPassword });
   }
+
+  updateUser(id: number, user: User) {
+    return this.http.put<User>('http://localhost:3000/users/' + id, user);
+  }
+
+  async updateStorage(user: any): Promise<void> {
+    await this.storage.set(this.userKey, user);
+    this.currentUser = user;
+  }
 }
