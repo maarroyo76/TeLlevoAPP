@@ -8,7 +8,7 @@ import { Observable, switchMap } from 'rxjs';
 })
 export class TripService {
 
-  private apiURL = 'http://localhost:3000/trips';
+  private apiURL = 'https://tellevo-server.onrender.com/trips';
 
   constructor(
     private http: HttpClient

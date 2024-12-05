@@ -12,6 +12,8 @@ export class LoginService {
   private userKey = 'user';
   private currentUser: User | null = null;
 
+  private apiURL = 'https://tellevo-server.onrender.com/users';
+
   constructor(
     private http: HttpClient,
     private storage: Storage
@@ -24,7 +26,7 @@ export class LoginService {
   }
 
   validateUser(username: string, password: string) {
-    return this.http.get<User[]>('http://localhost:3000/users?username=' + username + '&password=' + password).pipe(
+    return this.http.get<User[]>(`${this.apiURL}?username=${username}&password=${password}`).pipe(
       tap(async users => {
         if (users.length > 0) {
           await this.storage.set(this.userKey, users[0]);
@@ -35,7 +37,7 @@ export class LoginService {
   }
 
   createUser(user: User) {
-    return this.http.post<User>('http://localhost:3000/users', user);
+    return this.http.post<User>(this.apiURL, user);
   }
 
   async isAuth(): Promise<boolean> {
@@ -59,23 +61,23 @@ export class LoginService {
   }
 
   getUsers() {
-    return this.http.get<User[]>('http://localhost:3000/users');
+    return this.http.get<User[]>(this.apiURL);
   }
 
   getUserById(id: number) {
-    return this.http.get<User>('http://localhost:3000/users/' + id);
+    return this.http.get<User>(`${this.apiURL}/${id}`);
   }
 
   findUser(username: string, name: string, lastname: string) {
-    return this.http.get<User[]>('http://localhost:3000/users?username=' + username + '&name=' + name + '&lastname=' + lastname);
+    return this.http.get<User[]>(`${this.apiURL}?username=${username}&name=${name}&lastname=${lastname}`);
   }
 
   changePassword(id: number, newPassword: string) {
-    return this.http.patch<User>('http://localhost:3000/users/' + id, { password: newPassword });
+    return this.http.patch<User>(`${this.apiURL}/${id}`, { password: newPassword });
   }
 
   updateUser(id: number, user: User) {
-    return this.http.put<User>('http://localhost:3000/users/' + id, user);
+    return this.http.put<User>(`${this.apiURL}/${id}`, user);
   }
 
   async updateStorage(user: any): Promise<void> {

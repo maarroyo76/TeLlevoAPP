@@ -39,10 +39,10 @@
           <ion-input label="Horario" labelPlacement="floating" type="time" [(ngModel)]="trip.horario"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input label="Costo del Viaje" labelPlacement="floating" type="number" [(ngModel)]="trip.pricePerPerson"></ion-input>
+          <ion-input type="number" label="Costo del Viaje" labelPlacement="floating" type="number" [(ngModel)]="trip.pricePerPerson"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input label="Cantidad de Asientos Disponibles" labelPlacement="floating" type="number" [(ngModel)]="trip.totalCapacity"></ion-input>
+          <ion-input type="number" label="Cantidad de Asientos Disponibles" labelPlacement="floating" type="number" [(ngModel)]="trip.totalCapacity"></ion-input>
         </ion-item>
       </ion-list>
       <ion-button expand="block" (click)="registrarViaje()">Registra Tu Viaje</ion-button>
