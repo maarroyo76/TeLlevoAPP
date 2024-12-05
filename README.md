@@ -4,22 +4,32 @@ Te Llevo APP es una aplicación móvil diseñada para ayudar a los estudiantes d
 
 ## Funciones Principales
 
-- **Registro de Usuarios**: Los estudiantes pueden registrarse en la aplicación con un nombre de usuario, contraseña, nombre, apellido y dirección de correo electrónico.
+- **Registro de Usuarios**: Los estudiantes pueden registrarse en la aplicación proporcionando los siguientes datos: nombre de usuario, contraseña, nombre, apellido y dirección de correo electrónico.
   
-- **Inicio de Sesión**: Los usuarios pueden iniciar sesión en la aplicación y acceder a sus funciones personalizadas.
+- **Inicio de Sesión**: Los usuarios pueden iniciar sesión con sus credenciales (nombre de usuario y contraseña) para acceder a las funcionalidades personalizadas de la aplicación.
 
-- **Gestión de Viajes**: Los usuarios pueden crear y gestionar viajes compartidos, eligiendo destinos y costos por persona.
+- **Gestión de Viajes**: Los usuarios pueden crear, ver, editar y eliminar viajes. Cada viaje tiene los siguientes atributos:
+  - Destino
+  - Fecha y hora de salida
+  - Costo por persona
+  - Pasajeros registrados
 
-- **Opciones de Viaje**: Se ofrecen diferentes destinos con sus respectivos costos, permitiendo a los usuarios seleccionar la mejor opción.
+- **Opciones de Viaje**: Los usuarios pueden seleccionar entre diferentes opciones de viaje, cada una con su respectivo costo y número de plazas disponibles.
 
-- **Interfaz Amigable**: La aplicación cuenta con una interfaz fácil de usar, con animaciones para mejorar la experiencia del usuario.
+- **Unirse a Viajes**: Los usuarios pueden unirse a viajes creados por otros usuarios si aún hay plazas disponibles, permitiendo el compartir el transporte.
+
+- **Visualización de Viajes**: Los usuarios pueden consultar los viajes disponibles y sus detalles a través de una interfaz de lista y mapas interactivos.
+
+- **Gestión del Perfil de Usuario**: Los usuarios pueden modificar su perfil, incluyendo cambios en su nombre, dirección de correo electrónico y contraseña.
+
+- **Interfaz Amigable**: La aplicación tiene una interfaz intuitiva y visualmente atractiva, con animaciones y transiciones para mejorar la experiencia del usuario.
+
 
 ## Tecnologías Utilizadas
 
 - **Ionic**: Framework para el desarrollo de aplicaciones móviles híbridas.
 - **Angular**: Framework para la construcción de aplicaciones web.
 - **TypeScript**: Lenguaje de programación que mejora JavaScript.
-- **JSON Server**: API RESTful para simular un servidor backend y gestionar datos de usuarios y viajes.
 
 ## Requisitos
 
@@ -39,11 +49,6 @@ Para instalar y ejecutar el proyecto en tu máquina local, sigue estos pasos:
 2. **Instalar Dependencias**:
     ```bash
      npm install
-4. **Inicia el servidor de JSON Server (asegúrate de tener instalado json-server)**
-
-    ```bash
-    json-server info.json
-  
 3. **Iniciar la Aplicacion**:
     ```bash
     ionic serve
