@@ -136,6 +136,9 @@ export class RecoverPage implements OnInit {
         } else {
           this.showToastMessage('Usuario no encontrado', 'warning');
         }
+      },
+      (error) => {
+        this.showToastMessage('Error al buscar el usuario', 'danger');
       });
     } else {
       this.showToastMessage('Todos los campos son requeridos', 'danger');
