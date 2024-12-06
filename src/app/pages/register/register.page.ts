@@ -153,7 +153,7 @@ export class RegisterPage implements OnInit {
         this.router.navigate(['/log-in']);
       },
       error: () => {
-        this.showToastMessage('Nombre de usuario ya en uso', 'warning');
+        this.showToastMessage('Error en el servidor', 'danger');
       }
     });
   }
