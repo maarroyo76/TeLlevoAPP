@@ -10,18 +10,25 @@ import { ViewWillEnter } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 
+declare var google: any;
+
 @Component({
   selector: 'app-index',
   templateUrl: './index.page.html',
   styleUrls: ['./index.page.scss'],
 })
 export class IndexPage implements OnInit, ViewWillEnter {
-  @ViewChild('map') mapElement!: ElementRef;
+  @ViewChild('destinationInput', { static: false }) destinationInput: ElementRef | undefined;
+  autocomplete: any;
+  destination: string = '';
+  coords: { lat: number; lng: number } | null = null; // Almacena las coordenadas
+
+  geocoder = new google.maps.Geocoder();
 
   user: User | null = null;
   metodoPago: string = '';
   viajeSeleccionado: Trip | null = null;
-  segment: string = 'Viajes';
+  segment: string = 'mostrarViajes';
   mostrarFormulario: boolean = false;
   lastTripId: number = 0;
   driverName: string = '';
@@ -34,12 +41,12 @@ export class IndexPage implements OnInit, ViewWillEnter {
     pricePerPerson: 0,
     totalPassengers: 0,
     totalCapacity: 0,
-    licensePlate: '',
+    licensePlate: this.user?.licensePlate || '',
     status: 'Programado',
     driverId: 0,
     passengerIds: [],
     horario: '',
-    startPoint: { lat: 0, lng: 0 }, // Coordenadas iniciales predeterminadas
+    startPoint: { lat:-33.4991412, lng:-70.6176012}, // Coordenadas iniciales predeterminadas
     destinationPoint: { lat: 0, lng: 0 }, // Coordenadas de destino predeterminadas
     passengerDestinations: [],
   };
@@ -133,6 +140,8 @@ export class IndexPage implements OnInit, ViewWillEnter {
         passengerIds: [],
         driverId: this.user!.id,
         driverName: `${this.user!.name} ${this.user!.lastname}`,
+        startPoint: { lat: -33.4991412, lng: -70.6176012 },
+        destinationPoint: this.coords || { lat: 0, lng: 0 },
       };
 
       this.tripService.addTrip(nuevoViaje).subscribe({
@@ -164,15 +173,15 @@ export class IndexPage implements OnInit, ViewWillEnter {
       pricePerPerson: 0,
       totalPassengers: 0,
       totalCapacity: 0,
-      licensePlate: '',
+      licensePlate: this.user?.licensePlate || '',
       status: 'Programado',
       driverId: 0,
       passengerIds: [],
       horario: '',
-      startPoint: { lat: 0, lng: 0 }, // Coordenadas iniciales predeterminadas
       destinationPoint: { lat: 0, lng: 0 }, // Coordenadas de destino predeterminadas
       passengerDestinations: [],
     };
+    this.destination = '';
   }
 
   async showToastMessage(message: string, color: string) {
@@ -194,12 +203,54 @@ export class IndexPage implements OnInit, ViewWillEnter {
     await alert.present();
   }
 
-  mostrarFormularioViaje() {
-    this.segment = 'mostrarFormulario'; 
+  isUserPassenger(trip: Trip): boolean {
+    return trip.passengerIds.includes((this.user?.id || -1).toString());
   }
 
-  mostrarViajesRegistrados() {
-    this.segment = 'mostrarViajes';
+  isUserDriver(trip: Trip): boolean {
+    return trip.driverId === this.user?.id;
+  }
+
+  showingForm() {
+    this.loadGooglePlacesAutocomplete();
+  }
+
+  loadGooglePlacesAutocomplete() {
+    if (!google || !google.maps || !google.maps.places) {
+      console.error('La API de Google Places no está cargada.');
+      return;
+    }
+
+    const inputElement = this.destinationInput?.nativeElement;
+    if (inputElement) {
+      this.autocomplete = new google.maps.places.Autocomplete(inputElement, {
+        types: ['geocode'],
+        componentRestrictions: { country: 'cl' },
+      });
+
+      this.autocomplete.addListener('place_changed', () => {
+        const place = this.autocomplete.getPlace();
+        this.destination = place?.formatted_address || '';
+        if (place.geometry && place.geometry.location) {
+          const location = place.geometry.location;
+          this.coords = { lat: location.lat(), lng: location.lng() };
+        }
+      });
+    }
+  }
+
+  geocodeAddress(address: any): Promise<{ lat: number; lng: number }> {
+    return new Promise((resolve, reject) => {
+      this.geocoder.geocode({ address: address }, (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
+        if (status === google.maps.GeocoderStatus.OK && results[0]) {
+          const location = results[0].geometry.location;
+          resolve({ lat: location.lat(), lng: location.lng() });
+        } else {
+          console.error('Error al geocodificar:', status);
+          reject(new Error(`Geocoding falló: ${status}`));
+        }
+      });
+    });
   }
 
   goToProfile() {
