@@ -47,6 +47,10 @@
             <span class="toggle-text">{{ user.driver ? 'Sí' : 'No' }}</span>
             <ion-icon slot="end" name="car-outline"></ion-icon>
           </ion-item>
+          <ion-item *ngIf="user.driver">
+            <ion-label position="stacked"  placeholder="Ingresa la patente de tu auto">Patente</ion-label>
+            <ion-input [(ngModel)]="user.licensePlate" (ionInput)="onInput($event)" maxlength="8"></ion-input>
+          </ion-item>
           <ion-button expand="block" (click)="confirmUpdateProfile()">
             <ion-icon name="save-outline" slot="start"></ion-icon>
               Guardar Cambios

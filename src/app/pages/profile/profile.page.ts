@@ -30,8 +30,26 @@ export class ProfilePage implements OnInit {
     this.user = await this.loginService.getCurrentUser();
   }
 
-  private  async updateProfile() {
+  onInput(event: any): void {
+    let input = event.target.value.replace(/[^A-Za-z0-9]/g, '');
+    const length = input.length;
+
+    if (length > 2 && length <= 4) {
+      input = input.substring(0, 2) + '-' + input.substring(2);
+    } else if (length > 4) {
+      input = input.substring(0, 2) + '-' + input.substring(2, 4) + '-' + input.substring(4);
+    }
+
+    this.user.licensePlate = input.toUpperCase();
+  }
+
+  private async updateProfile() {
     const userId = this.user.id;
+    
+    if (this.user.driver === false) {
+      this.user.licensePlate = '';
+    }
+
     this.loginService.updateUser(userId, this.user).subscribe(async (user: any) => {
       await this.loginService.updateStorage(user);
       this.user = user;

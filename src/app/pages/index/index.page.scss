@@ -1,8 +1,3 @@
-/* Estilos para el header y footer */
-ion-toolbar {
-  --background: #0A0908;
-}
-
 #header, #footer {
   color: #FFF6F0;
   
@@ -110,5 +105,12 @@ ion-card {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin: 25px 0;
-  
+}
+
+input {
+  width: 400px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 16px;
 }

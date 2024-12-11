@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Trip } from 'src/app/models/trip';
-import { ToastController, AlertController, ModalController } from '@ionic/angular';
+import { ToastController, AlertController, ModalController, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { User } from 'src/app/models/user';
 import { LoginService } from 'src/app/services/login.service';
@@ -30,7 +30,8 @@ export class ViajePage implements OnInit {
     private modalCtrl: ModalController,
     private storage: Storage,
     private loginService: LoginService,
-    private tripService: TripService
+    private tripService: TripService,
+    private loadingCtrl: LoadingController
   ) { 
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
    }
@@ -115,15 +116,22 @@ export class ViajePage implements OnInit {
               },
               {
                 text: 'Aceptar',
-                handler: (data: any) => {
+                handler: async (data: any) => {
                   this.metodoPago = data.metodoPago;
+                  const loading = await this.loadingCtrl.create({
+                    message: 'Reservando viaje...',
+                  });
+                  await loading.present();
+
                   this.tripService.addPassenger(this.viaje!.id, this.user!.id.toString(), destino, coords)
                     .subscribe({
-                      next: () => {
+                      next: async () => {
+                        await loading.dismiss();
                         this.loadViaje();
                         this.createToast(`Registrado exitosamente en el viaje!`, 'success');
                       },
-                      error: () => {
+                      error: async () => {
+                        await loading.dismiss();
                         this.createToast('No se pudo registrar. Intenta de nuevo.', 'danger');
                       },
                     });
@@ -375,6 +383,17 @@ export class ViajePage implements OnInit {
     });
     toast.present();
   }
+
+  async createLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Cargando...',
+      duration: 2000
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+  }
+
 
   async createAlert(header: string, message: string, buttons: any[] = ['Ok']) {
     const alertCtrl = await this.alertCtrl.create({

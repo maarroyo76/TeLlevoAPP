@@ -3,6 +3,7 @@ export interface  User {
     name: string;
     lastname: string;
     driver: boolean;
+    licensePlate: string;
     username: string;
     email: string;
     password: string;

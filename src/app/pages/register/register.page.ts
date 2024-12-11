@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
-import { ToastController, AnimationController } from '@ionic/angular';
+import { ToastController, AnimationController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { map, Observable, switchMap } from 'rxjs';
 
@@ -17,6 +17,7 @@ export class RegisterPage implements OnInit {
     name: '',
     lastname: '',
     driver: false,
+    licensePlate: '',
     email: '',
   };
 
@@ -25,6 +26,7 @@ export class RegisterPage implements OnInit {
     private loginService: LoginService,
     private toastController: ToastController,
     private animationController: AnimationController,
+    private loadingController: LoadingController,
     private router: Router
   ) { }
 
@@ -136,11 +138,30 @@ export class RegisterPage implements OnInit {
     );
   }
 
+  onInput(event: any): void {
+    let input = event.target.value.replace(/[^A-Za-z0-9]/g, '');
+    const length = input.length;
+
+    if (length > 2 && length <= 4) {
+      input = input.substring(0, 2) + '-' + input.substring(2);
+    } else if (length > 4) {
+      input = input.substring(0, 2) + '-' + input.substring(2, 4) + '-' + input.substring(4);
+    }
+
+    this.user.licensePlate = input.toUpperCase();
+  }
+
   register() {
     if (!this.isFormValid()) {
       this.showToastMessage('Todos los campos son requeridos', 'danger');
       return;
     }
+
+    if (this.user.driver === false) {
+      this.user.licensePlate = '';
+    }
+    
+    this.presentLoading();
 
     this.assignUserId().pipe(
       switchMap(newId => {
@@ -148,11 +169,13 @@ export class RegisterPage implements OnInit {
         return this.loginService.createUser(this.user);
       })
     ).subscribe({
-      next: () => {
+      next: async () => {
+        await this.loadingController.dismiss();
         this.showToastMessage('Registro exitoso!', 'success');
         this.router.navigate(['/log-in']);
       },
-      error: () => {
+      error: async () => {
+        await this.loadingController.dismiss();
         this.showToastMessage('Error en el servidor', 'danger');
       }
     });
@@ -167,6 +190,17 @@ export class RegisterPage implements OnInit {
     this.user.lastname = '';
     this.user.email = '';
     this.user.driver = false;
+    this.user.licensePlate = '';
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+      duration: 2000
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
   }
 
   async showToastMessage(message: string, color: string) {

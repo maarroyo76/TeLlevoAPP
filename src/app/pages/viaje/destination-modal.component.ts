@@ -69,8 +69,6 @@ export class DestinationModalComponent {
     });
   }
 
-
-
   async confirmDestination() {
     if (!this.destination) {
       const toast = await this.toastController.create({
